@@ -9,21 +9,21 @@ var masterList = {
   view: "list",
   id: "masterList",
   select: true,
-  autoheight: true,
-  width: 300,
-  on: {
-    onItemClick: function(id) {
-
-    }
-  }
+  height: 500,
+  width: 300
+  //click: function(id) {
+  //    masterListCtlr.load_detail(this.getItem(id).id);
+  //    return false;
+  //}
 };
 
 /*=====================================================================
 Master List Controller
 =====================================================================*/
 var masterListCtlr = {
-  init: function(template) {
+  init: function(template, detailFunc) {
     $$("masterList").define("template", template);
+    $$("masterList").attachEvent("onItemClick", detailFunc);
   },
 
   clear: function() {
@@ -33,6 +33,7 @@ var masterListCtlr = {
   load: function(data) {
     $$("masterList").parse(data);
   }
+
 };
 
 /*=====================================================================
@@ -104,9 +105,9 @@ var masterListPanel = {
 Master List Panel Controller
 =====================================================================*/
 var masterListPanelCtlr = {
-  init: function(label, template) {
+  init: function(label, template, detailFunc) {
     masterListToolbarCtlr.init(label);
-    masterListCtlr.init(template);
+    masterListCtlr.init(template, detailFunc);
   },
 
   load: function(data) {

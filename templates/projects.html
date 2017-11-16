@@ -12,6 +12,7 @@
   </script>
 
   <script src="{{ url_for('static', filename='js/master_list_panel.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/project_panel.js') }}"></script>
 
   <script type="text/javascript" charset="utf-8">
 
@@ -21,12 +22,13 @@
         container: "content_container",
         type: "wide",
         cols: [
-            masterListPanel
+            masterListPanel, projectPanel
         ]
       });
 
-      masterListPanelCtlr.init('Projects', '#nickname#');
-      masterListPanelCtlr.load(projects);
+{#      masterListPanelCtlr.init('Projects', '#nickname#');#}
+{#      masterListPanelCtlr.load(projects);#}
+      projectPanelCtlr.init();
     });
 
   </script>

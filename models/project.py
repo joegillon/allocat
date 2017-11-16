@@ -8,7 +8,7 @@ class Project(object):
     # flds = ['id', 'name', 'nickname', 'first_month', 'last_month', 'notes', 'billing']
 
     def __init__(self, d=None):
-        self.prjid = None
+        self.id = None
         self.name = None
         self.nickname = None
         self.first_month = None
@@ -24,7 +24,7 @@ class Project(object):
         return self.nickname
 
     def __from_dict(self, d):
-        self.prjid = d['id']
+        self.id = d['id']
         self.name = d['name']
         self.nickname = d['nickname']
         self.first_month = Monkey(d['start_date'])
