@@ -27,8 +27,8 @@ class Project(object):
         self.id = d['id']
         self.name = d['name']
         self.nickname = d['nickname']
-        self.first_month = Monkey(d['start_date'])
-        self.last_month = Monkey(d['end_date'])
+        self.first_month = Monkey(d['first_mont'])
+        self.last_month = Monkey(d['last_month'])
         self.timeframe = Timeframe(self.first_month, self.last_month)
         self.notes = d['notes']
 
@@ -36,7 +36,6 @@ class Project(object):
     def get_all():
         sql = "SELECT * FROM projects ORDER BY nickname;"
         return Dao.execute(sql)
-        # return [Project(rec) for rec in rex] if rex else []
 
     @staticmethod
     def get_one(id):

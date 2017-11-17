@@ -10,11 +10,7 @@ var masterList = {
   id: "masterList",
   select: true,
   height: 500,
-  width: 300
-  //click: function(id) {
-  //    masterListCtlr.load_detail(this.getItem(id).id);
-  //    return false;
-  //}
+  width: 200
 };
 
 /*=====================================================================
@@ -65,7 +61,7 @@ var masterListToolbar = {
       view: "text",
       id: "fltr",
       label: 'Filter',
-      width: 300,
+      width: 200,
       on: {
         onTimedKeyPress: function() {
           masterListToolbarCtlr.filter(this.getValue().toLowerCase());

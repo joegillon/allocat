@@ -1,18 +1,19 @@
 /**
- * Created by Joe on 11/15/2017.
+ * Created by Joe on 11/17/2017.
  */
 
 /*=====================================================================
-Project Form
+Assignment Form
 =====================================================================*/
-var projectForm = {
+var assignmentForm = {
   view: "form",
-  id: "projectForm",
+  id: "assignmentForm",
   elements: [
-    {view: "textarea", label: "Name", name: "name", width: 300, height: 100},
-    {view: "text", label: "Nickname", name: "nickname", width: 300},
+    {view: "text", label: "Employee", name: "employee", width: 300},
+    {view: "text", label: "Project", name: "project", width: 300},
     {view: "text", label: "First Month", name: "first_month", width: 300},
     {view: "text", label: "Last Month", name: "last_month", width: 300},
+    {view: "text", label: "Effort", name: "effort"},
     {view: "textarea", label: "Notes", name: "notes", width: 300, height: 100},
     {view: "button", value: "Save", type: "form"},
     {view: "button", value: "Remove"}
@@ -20,70 +21,70 @@ var projectForm = {
 };
 
 /*=====================================================================
-Project Form Controller
+Assignment Form Controller
 =====================================================================*/
-var projectFormCtlr = {
+var assignmentFormCtlr = {
   init: function() {},
 
   clear: function() {
-
+    $$("assignmentForm").clear();
   },
 
-  load: function(prj) {
-    $$("projectForm").setValues({
-      name: prj.name,
-      nickname: prj.nickname,
-      first_month: prj.first_month,
-      last_month: prj.last_month,
-      notes: prj.notes
+  load: function(asn) {
+    $$("assignmentForm").setValues({
+      employee: asn.employee,
+      project: asn.project,
+      first_month: asn.first_month,
+      last_month: asn.last_month,
+      effort: asn.effort,
+      notes: asn.notes
     });
   }
 };
 
 /*=====================================================================
-Project Form Toolbar
+Assignment Form Toolbar
 =====================================================================*/
-var projectFormToolbar = {
+var assignmentFormToolbar = {
   view: "toolbar",
-  id: "projectFormToolbar",
+  id: "assignmentFormToolbar",
   height: 35,
   cols: [
-    {view: "label", label: "Project Details"}
+    {view: "label", label: "Assignment Details"}
   ]
 };
 
 /*=====================================================================
-Project Form Toolbar Controller
+Assignment Form Toolbar Controller
 =====================================================================*/
-var projectFormToolbarCtlr = {
+var assignmentFormToolbarCtlr = {
   init: function() {}
 };
 
 /*=====================================================================
-Project Panel
+Assignment Panel
 =====================================================================*/
-var projectPanel = {
-  rows: [projectFormToolbar, projectForm]
+var assignmentPanel = {
+  type: "space",
+  cols: [
+    {
+      rows: [assignmentListToolbar, assignmentList]
+    },
+    {
+      rows: [assignmentFormToolbar, assignmentForm]
+    }
+  ]
 };
 
 /*=====================================================================
-Project Panel Controller
+Assignment Panel Controller
 =====================================================================*/
-var projectPanelCtlr = {
+var assignmentPanelCtlr = {
 
   init: function() {
-    var detailFunc = function(prjid) {
-      var prj = $$("masterList").getItem(prjid);
-      projectFormCtlr.load(prj);
-      assignmentListCtlr.load(prjid);
-    };
-
-    masterListPanelCtlr.init('Projects', '#nickname#', detailFunc);
-    masterListPanelCtlr.load(projects);
-
-    projectFormToolbarCtlr.init();
-    projectFormCtlr.init();
-
+    assignmentListPanelCtlr.init();
+    assignmentFormCtlr.init();
+    assignmentFormToolbarCtlr.init();
   }
 
 };

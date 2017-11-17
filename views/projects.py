@@ -14,3 +14,14 @@ def prj_list():
         title='allocat projects',
         data=data
     )
+
+
+@prj.route('/assignments', methods=['GET'])
+def prj_assignments():
+    from models.assignment import Assignment
+    from models.monkey import Monkey
+
+    prjid = int(request.args['prjid'])
+    monkey = Monkey.today()
+    data = Assignment.get_for_project(prjid, monkey)
+    return jsonify(assignments=data)

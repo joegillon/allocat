@@ -13,6 +13,8 @@
 
   <script src="{{ url_for('static', filename='js/master_list_panel.js') }}"></script>
   <script src="{{ url_for('static', filename='js/project_panel.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/assignment_list_panel.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/assignment_panel.js') }}"></script>
 
   <script type="text/javascript" charset="utf-8">
 
@@ -20,15 +22,14 @@
 
       webix.ui({
         container: "content_container",
-        type: "wide",
+        type: "space",
         cols: [
-            masterListPanel, projectPanel
+            masterListPanel, projectPanel, assignmentPanel
         ]
       });
 
-{#      masterListPanelCtlr.init('Projects', '#nickname#');#}
-{#      masterListPanelCtlr.load(projects);#}
       projectPanelCtlr.init();
+      assignmentPanelCtlr.init();
     });
 
   </script>
