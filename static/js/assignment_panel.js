@@ -3,6 +3,103 @@
  */
 
 /*=====================================================================
+Assignment List
+=====================================================================*/
+var assignmentList = {
+  view: "list",
+  id: "assignmentList",
+  select: true,
+  height: 500,
+  width: 200,
+  template: "#employee#: #effort#",
+  click: function(id) {
+    assignmentFormCtlr.load(this.getItem(id));
+  }
+};
+
+/*=====================================================================
+Assignment List Controller
+=====================================================================*/
+var assignmentListCtlr = {
+  init: function() {},
+
+  clear: function() {
+    $$("assignmentList").clearAll();
+    assignmentFormCtlr.clear();
+  },
+
+  load: function(prjid) {
+    this.clear();
+    var url = Flask.url_for('prj.prj_assignments', {prjid: prjid});
+    webix.ajax(url, {
+      error: function(text, data, XmlHttpRequest) {
+        var msg = "Error " + XmlHttpRequest.status + ": " + XmlHttpRequest.statusText;
+        webix.message(msg);
+      },
+      success: function(text, data, XmlHttpRequest) {
+        $$("assignmentList").parse(data.json()["assignments"]);
+      }
+    })
+  }
+
+};
+
+/*=====================================================================
+Assignment List Toolbar
+=====================================================================*/
+var assignmentListToolbar = {
+  view: "toolbar",
+  id: "assignmentListToolbar",
+  height: 70,
+  rows: [
+    {
+      cols: [
+        {
+          view: "label",
+          label: "Assignments"
+        },
+        {
+          view: "button",
+          id: "addButton",
+          value: "Add",
+          click: function() {
+            assignmentListToolbarCtlr.add();
+          }
+        }
+      ]
+    },
+    {
+      view: "text",
+      id: "fltr",
+      label: 'Filter',
+      width: 200,
+      on: {
+        onTimedKeyPress: function() {
+          assignmentListToolbarCtlr.filter(this.getValue().toLowerCase());
+        }
+      }
+    }
+  ]
+};
+
+/*=====================================================================
+Assignment List Toolbar Controller
+=====================================================================*/
+var assignmentListToolbarCtlr = {
+  init: function() {},
+
+  add: function() {
+    webix.message('add assignment');
+  },
+
+  filter: function(value) {
+    $$("assignmentList").filter(function(obj) {
+        return obj.employee.toLowerCase().indexOf(value) == 0;
+    })
+  }
+};
+
+/*=====================================================================
 Assignment Form
 =====================================================================*/
 var assignmentForm = {

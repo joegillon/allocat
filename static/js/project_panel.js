@@ -3,6 +3,97 @@
  */
 
 /*=====================================================================
+Project List
+=====================================================================*/
+var projectList = {
+  view: "list",
+  id: "projectList",
+  select: true,
+  height: 500,
+  width: 200,
+  template: "#nickname#",
+  click: function(id) {
+    projectFormCtlr.load(this.getItem(id));
+    assignmentListCtlr.load(id);
+  }
+};
+
+/*=====================================================================
+Project List Controller
+=====================================================================*/
+var projectListCtlr = {
+  init: function() {
+    this.load(projects);
+  },
+
+  clear: function() {
+    $$("projectList").clearAll();
+  },
+
+  load: function(data) {
+    this.clear();
+    $$("projectList").parse(data);
+  }
+
+};
+
+/*=====================================================================
+Project List Toolbar
+=====================================================================*/
+var projectListToolbar = {
+  view: "toolbar",
+  id: "projectListToolbar",
+  height: 70,
+  rows: [
+    {
+      cols: [
+        {
+          view: "label",
+          label: "Projects"
+        },
+        {
+          view: "button",
+          //id: "addButton",
+          value: "Add",
+          click: function() {
+            projectListToolbarCtlr.add();
+          }
+        }
+      ]
+    },
+    {
+      view: "text",
+      id: "fltr",
+      label: 'Filter',
+      width: 200,
+      on: {
+        onTimedKeyPress: function() {
+          webix.message('boo');
+          projectListToolbarCtlr.filter(this.getValue().toLowerCase());
+        }
+      }
+    }
+  ]
+};
+
+/*=====================================================================
+Project List Toolbar Controller
+=====================================================================*/
+var projectListToolbarCtlr = {
+  init: function() {},
+
+  add: function() {
+    projectFormCtlr.clear();
+  },
+
+  filter: function(value) {
+    $$("projectList").filter(function(obj) {
+        return obj.nickname.toLowerCase().indexOf(value) == 0;
+    })
+  }
+};
+
+/*=====================================================================
 Project Form
 =====================================================================*/
 var projectForm = {
@@ -26,7 +117,7 @@ var projectFormCtlr = {
   init: function() {},
 
   clear: function() {
-
+    $$("projectForm").clear();
   },
 
   load: function(prj) {
@@ -63,7 +154,15 @@ var projectFormToolbarCtlr = {
 Project Panel
 =====================================================================*/
 var projectPanel = {
-  rows: [projectFormToolbar, projectForm]
+  type: "space",
+  cols: [
+    {
+      rows: [projectListToolbar, projectList]
+    },
+    {
+      rows: [projectFormToolbar, projectForm]
+    }
+  ]
 };
 
 /*=====================================================================
@@ -72,18 +171,10 @@ Project Panel Controller
 var projectPanelCtlr = {
 
   init: function() {
-    var detailFunc = function(prjid) {
-      var prj = $$("masterList").getItem(prjid);
-      projectFormCtlr.load(prj);
-      assignmentListCtlr.load(prjid);
-    };
-
-    masterListPanelCtlr.init('Projects', '#nickname#', detailFunc);
-    masterListPanelCtlr.load(projects);
-
-    projectFormToolbarCtlr.init();
+    projectListCtlr.init();
+    projectListToolbarCtlr.init();
     projectFormCtlr.init();
-
+    projectFormToolbarCtlr.init();
   }
 
 };

@@ -11,9 +11,7 @@
     var projects = {{ data|tojson }};
   </script>
 
-  <script src="{{ url_for('static', filename='js/master_list_panel.js') }}"></script>
   <script src="{{ url_for('static', filename='js/project_panel.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/assignment_list_panel.js') }}"></script>
   <script src="{{ url_for('static', filename='js/assignment_panel.js') }}"></script>
 
   <script type="text/javascript" charset="utf-8">
@@ -24,7 +22,7 @@
         container: "content_container",
         type: "space",
         cols: [
-            masterListPanel, projectPanel, assignmentPanel
+            projectPanel, assignmentPanel
         ]
       });
 
