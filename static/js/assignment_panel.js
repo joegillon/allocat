@@ -30,16 +30,12 @@ var assignmentListCtlr = {
 
   load: function(prjid) {
     this.clear();
+    //noinspection JSUnresolvedVariable,JSUnresolvedFunction
     var url = Flask.url_for('prj.prj_assignments', {prjid: prjid});
-    webix.ajax(url, {
-      error: function(text, data, XmlHttpRequest) {
-        var msg = "Error " + XmlHttpRequest.status + ": " + XmlHttpRequest.statusText;
-        webix.message(msg);
-      },
-      success: function(text, data, XmlHttpRequest) {
-        $$("assignmentList").parse(data.json()["assignments"]);
-      }
-    })
+
+    ajaxDao.get(url, function(data) {
+      $$("assignmentList").parse(data["assignments"]);
+    });
   }
 
 };
@@ -70,7 +66,6 @@ var assignmentListToolbar = {
     },
     {
       view: "text",
-      id: "fltr",
       label: 'Filter',
       width: 200,
       on: {
@@ -179,9 +174,15 @@ Assignment Panel Controller
 var assignmentPanelCtlr = {
 
   init: function() {
-    assignmentListPanelCtlr.init();
+    assignmentListCtlr.init();
+    assignmentListToolbarCtlr.init();
     assignmentFormCtlr.init();
     assignmentFormToolbarCtlr.init();
+  },
+
+  clear: function() {
+    assignmentListCtlr.clear();
+    assignmentFormCtlr.clear();
   }
 
 };

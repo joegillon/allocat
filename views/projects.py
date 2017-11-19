@@ -25,3 +25,20 @@ def prj_assignments():
     monkey = Monkey.today()
     data = Assignment.get_for_project(prjid, monkey)
     return jsonify(assignments=data)
+
+
+@prj.route('/save', methods=['POST'])
+def prj_save():
+    values = json.loads(request.form['params'])
+    result = Project.save(values)
+    data = Project.get_all()
+    return jsonify(projects=data)
+
+
+@prj.route('/remove', methods=['GET'])
+def prj_drop():
+    prjid = json.loads(request.args['prjid'])
+    result = Project.delete(prjid)
+    data = Project.get_all()
+    return jsonify(projects=data)
+

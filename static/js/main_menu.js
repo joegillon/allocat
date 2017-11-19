@@ -41,31 +41,37 @@ var mainMenu = {
   data: menu_data,
   type: {
     subsign: true,
-    height: 50
+    height: 40
   },
   on: {
     onMenuItemClick: function(id) {
       if (id == "login") {
+        //noinspection JSUnresolvedVariable,JSUnresolvedFunction
         window.location.href = Flask.url_for('security.login');
         return;
       }
       if (id == "register") {
+        //noinspection JSUnresolvedVariable,JSUnresolvedFunction
         window.location.href = Flask.url_for('security.register');
         return;
       }
       if (id == "change") {
+        //noinspection JSUnresolvedVariable,JSUnresolvedFunction
         window.location.href = Flask.url_for('security.change');
         return;
       }
       if (id == "projects") {
+        //noinspection JSUnresolvedVariable,JSUnresolvedFunction
         window.location.href = Flask.url_for('prj.prj_list');
         return;
       }
       if (id == "employees") {
+        //noinspection JSUnresolvedVariable,JSUnresolvedFunction
         window.location.href = Flask.url_for('emp.list');
         return;
       }
       if (id == "effort") {
+        //noinspection JSUnresolvedVariable,JSUnresolvedFunction
         window.location.href = Flask.url_for("eff.scoreboard");
         return;
       }

@@ -28,6 +28,7 @@ var projectListCtlr = {
 
   clear: function() {
     $$("projectList").clearAll();
+    projectListToolbarCtlr.clearFilter();
   },
 
   load: function(data) {
@@ -53,7 +54,6 @@ var projectListToolbar = {
         },
         {
           view: "button",
-          //id: "addButton",
           value: "Add",
           click: function() {
             projectListToolbarCtlr.add();
@@ -63,12 +63,11 @@ var projectListToolbar = {
     },
     {
       view: "text",
-      id: "fltr",
+      id: "projectFilter",
       label: 'Filter',
       width: 200,
       on: {
         onTimedKeyPress: function() {
-          webix.message('boo');
           projectListToolbarCtlr.filter(this.getValue().toLowerCase());
         }
       }
@@ -84,12 +83,17 @@ var projectListToolbarCtlr = {
 
   add: function() {
     projectFormCtlr.clear();
+    assignmentPanelCtlr.clear();
   },
 
   filter: function(value) {
     $$("projectList").filter(function(obj) {
         return obj.nickname.toLowerCase().indexOf(value) == 0;
     })
+  },
+
+  clearFilter: function() {
+    $$("projectFilter").setValue("");
   }
 };
 
@@ -100,13 +104,28 @@ var projectForm = {
   view: "form",
   id: "projectForm",
   elements: [
+    {view: "text", name: "id", hidden: true},
     {view: "textarea", label: "Name", name: "name", width: 300, height: 100},
     {view: "text", label: "Nickname", name: "nickname", width: 300},
     {view: "text", label: "First Month", name: "first_month", width: 300},
     {view: "text", label: "Last Month", name: "last_month", width: 300},
     {view: "textarea", label: "Notes", name: "notes", width: 300, height: 100},
-    {view: "button", value: "Save", type: "form"},
-    {view: "button", value: "Remove"}
+    {
+      view: "button",
+      value: "Save",
+      type: "form",
+      click: function() {
+        projectFormCtlr.save();
+      }
+    },
+    {
+      view: "button",
+      value: "Remove",
+      type: "danger",
+      click: function() {
+        projectFormCtlr.remove(this.getParentView().getValues().id);
+      }
+    }
   ]
 };
 
@@ -122,11 +141,39 @@ var projectFormCtlr = {
 
   load: function(prj) {
     $$("projectForm").setValues({
+      id: prj.id,
       name: prj.name,
       nickname: prj.nickname,
       first_month: prj.first_month,
       last_month: prj.last_month,
       notes: prj.notes
+    });
+  },
+
+  save: function() {
+    var frm = $$("projectForm");
+    if (!frm.validate()) {
+      return;
+    }
+    var values = frm.getValues({hidden: true});
+
+    //noinspection JSUnresolvedVariable,JSUnresolvedFunction
+    var url = Flask.url_for("prj.prj_save");
+
+    ajaxDao.post(url, values, function(data) {
+      projectListCtlr.load(data["projects"]);
+      webix.message("Record saved!");
+    });
+
+  },
+
+  remove: function(id) {
+    //noinspection JSUnresolvedVariable,JSUnresolvedFunction
+    var url = Flask.url_for("prj.prj_drop", {prjid: id});
+
+    ajaxDao.get(url, function(data) {
+      projectListCtlr.load(data["projects"]);
+      webix.message("Record removed!");
     });
   }
 };

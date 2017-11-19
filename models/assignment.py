@@ -43,7 +43,6 @@ class Assignment(object):
         if month:
             sql += ("AND a.first_month <= ? "
                     "AND a.last_month >= ? ")
-            # vals += [month.value, month.value]
-            vals += ['201611', '201611']
+            vals += [month.value, month.value]
         sql += "ORDER BY e.name;"
         return Dao.execute(sql, vals)
