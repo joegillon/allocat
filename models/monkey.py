@@ -57,8 +57,9 @@ class Monkey(object):
 
     @staticmethod
     def from_date(d):
-        return Monkey('%04d%02d' % (d.year, d.month))
+        return Monkey('%02d%02d' % (d.year - 2000, d.month))
 
     @staticmethod
     def today():
-        return Monkey.from_date(datetime.datetime.now())
+        d = datetime.datetime.now()
+        return '%02d%02d' % (d.year - 2000, d.month)
