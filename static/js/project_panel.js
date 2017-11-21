@@ -12,9 +12,13 @@ var projectList = {
   height: 500,
   width: 200,
   template: "#nickname#",
-  click: function(id) {
-    projectFormCtlr.load(this.getItem(id));
-    assignmentListCtlr.load(id);
+  on: {
+    onItemClick: function(id) {
+      projectListCtlr.selected(id);
+    },
+    onSelectChange: function(id) {
+      projectListCtlr.selected(id);
+    }
   }
 };
 
@@ -34,6 +38,16 @@ var projectListCtlr = {
   load: function(data) {
     this.clear();
     $$("projectList").parse(data);
+  },
+
+  select: function(id) {
+    $$("projectList").select(id);
+    $$("projectList").showItem(id);
+  },
+
+  selected: function(id) {
+    projectFormCtlr.load($$("projectList").getItem(id));
+    assignmentListCtlr.load(id);
   }
 
 };
@@ -55,6 +69,7 @@ var projectListToolbar = {
         {
           view: "button",
           value: "Add",
+          css: "add_button",
           click: function() {
             projectListToolbarCtlr.add();
           }
@@ -161,8 +176,13 @@ var projectFormCtlr = {
     var url = Flask.url_for("prj.prj_save");
 
     ajaxDao.post(url, values, function(data) {
+      if (data["numrows"]) {
+        webix.message("Record updated!");
+        return;
+      }
       projectListCtlr.load(data["projects"]);
-      webix.message("Record saved!");
+      projectListCtlr.select(data["prjid"]);
+      webix.message("Record added!");
     });
 
   },
@@ -173,6 +193,8 @@ var projectFormCtlr = {
 
     ajaxDao.get(url, function(data) {
       projectListCtlr.load(data["projects"]);
+      projectFormCtlr.clear();
+      assignmentPanelCtlr.clear();
       webix.message("Record removed!");
     });
   }

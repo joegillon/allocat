@@ -30,9 +30,15 @@ def prj_assignments():
 @prj.route('/save', methods=['POST'])
 def prj_save():
     values = json.loads(request.form['params'])
-    result = Project.save(values)
-    data = Project.get_all()
-    return jsonify(projects=data)
+    if values['id']:
+        numrows = Project.update(values)
+        return jsonify(numrows=numrows)
+    prjid = Project.add(values)
+    projects = Project.get_all()
+    return jsonify(
+        prjid=prjid,
+        projects=projects
+    )
 
 
 @prj.route('/remove', methods=['GET'])

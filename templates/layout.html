@@ -1,16 +1,19 @@
 {% extends "base.html" %}
 
 {% block navbar %}
-  <table border="0" width="100%">
+  <table border="0" width="100%" style="background-color: lightsteelblue">
     <tr>
       <td>
         <a href="http://localhost:3000/">
-          <img src="{{ url_for('static', filename='img/donkey_small.png') }}"/>
+          <img src="{{ url_for('static', filename='img/allocat1.ico') }}"/>
         </a>
       </td>
       <td> </td>
       <td>
         <div id="nav_container"></div>
+      </td>
+      <td>
+        <img src="{{ url_for('static', filename='img/allocat_name.png') }}"/>
       </td>
     </tr>
   </table>

@@ -10,22 +10,22 @@ var menu_data = [
   },
   {
     id: "projects",
-    icon: "",
+    icon: "newspaper-o",
     value: "Projects"
   },
   {
     id: "employees",
-    icon: "",
+    icon: "group",
     value: "Employees"
   },
   {
     id: "effort",
-    icon: "",
+    icon: "pie-chart",
     value: "Effort"
   },
   {
     id: "usermgt",
-    icon: "user",
+    icon: "user-secret",
     value: "User Management",
     submenu: [
       {id: "request", value: "Request Account"},
