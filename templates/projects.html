@@ -11,6 +11,7 @@
     var projects = {{ data|tojson }};
   </script>
 
+  <script src="{{ url_for('static', filename='js/monkey.js') }}"></script>
   <script src="{{ url_for('static', filename='js/ajax_dao.js') }}"></script>
   <script src="{{ url_for('static', filename='js/project_panel.js') }}"></script>
   <script src="{{ url_for('static', filename='js/assignment_panel.js') }}"></script>

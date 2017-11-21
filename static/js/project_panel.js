@@ -58,7 +58,7 @@ Project List Toolbar
 var projectListToolbar = {
   view: "toolbar",
   id: "projectListToolbar",
-  height: 70,
+  height: 85,
   rows: [
     {
       cols: [
@@ -120,10 +120,37 @@ var projectForm = {
   id: "projectForm",
   elements: [
     {view: "text", name: "id", hidden: true},
-    {view: "textarea", label: "Name", name: "name", width: 300, height: 100},
-    {view: "text", label: "Nickname", name: "nickname", width: 300},
-    {view: "text", label: "First Month", name: "first_month", width: 300},
-    {view: "text", label: "Last Month", name: "last_month", width: 300},
+    {
+      view: "textarea",
+      label: "Name",
+      name: "name",
+      width: 300,
+      height: 100,
+      invalidMessage: "Project name is required!"
+    },
+    {
+      view: "text",
+      label: "Nickname",
+      name: "nickname",
+      width: 300,
+      invalidMessage: "Project nickname is required!"
+    },
+    {
+      view: "text",
+      label: "First Month",
+      name: "first_month",
+      placeholder: "MM/YY",
+      width: 300,
+      invalidMessage: "Month format is numeric MM/YY!"
+    },
+    {
+      view: "text",
+      label: "Last Month",
+      name: "last_month",
+      placeholder: "MM/YY",
+      width: 300,
+      invalidMessage: "Month format is numeric MM/YY!"
+    },
     {view: "textarea", label: "Notes", name: "notes", width: 300, height: 100},
     {
       view: "button",
@@ -140,8 +167,14 @@ var projectForm = {
       click: function() {
         projectFormCtlr.remove(this.getParentView().getValues().id);
       }
-    }
-  ]
+    },
+  ],
+  rules: {
+    "name": webix.rules.isNotEmpty,
+    "nickname": webix.rules.isNotEmpty,
+    "first_month": MonKey.isValidInput,
+    "last_month": MonKey.isValidInput
+  }
 };
 
 /*=====================================================================
@@ -159,8 +192,8 @@ var projectFormCtlr = {
       id: prj.id,
       name: prj.name,
       nickname: prj.nickname,
-      first_month: prj.first_month,
-      last_month: prj.last_month,
+      first_month: MonKey.prettify(prj.first_month),
+      last_month: MonKey.prettify(prj.last_month),
       notes: prj.notes
     });
   },
@@ -171,6 +204,12 @@ var projectFormCtlr = {
       return;
     }
     var values = frm.getValues({hidden: true});
+    values.first_month = MonKey.uglify(values.first_month);
+    values.last_month = MonKey.uglify(values.last_month);
+    if (!MonKey.isValidSpan(values.first_month, values.last_month)) {
+      webix.message({error: "First month must precede last month!"});
+      return;
+    }
 
     //noinspection JSUnresolvedVariable,JSUnresolvedFunction
     var url = Flask.url_for("prj.prj_save");

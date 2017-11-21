@@ -1,5 +1,18 @@
-.add_button button {
-    background-color: #1c1c1c;
+/*.add_button button {*/
+    /*background-color: teal;*/
+    /*color: white;*/
+/*}*/
+
+.webix_view {
+    font-size:13px;
 }
 
-.webix_layout_space,.webix_layout_wide{background-color:#1c1c1c}
+.webix_header>div {
+    font-size:16px;
+}
+
+.webix_el_button button {
+    color: white;
+}
+
+.webix_layout_space,.webix_layout_wide{background-color:teal}
