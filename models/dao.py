@@ -32,3 +32,18 @@ class Dao(object):
             return cursor.lastrowid
         else:
             return cursor.rowcount
+
+    @staticmethod
+    def transaction(sqls):
+        cxn = sqlite3.connect(dbfile)
+        cxn.isolation_level = None
+        try:
+            cursor = cxn.cursor()
+            cursor.execute('BEGIN')
+            for sql in sqls:
+                cursor.execute(sql)
+            cursor.execute('COMMIT')
+            return True
+        except cxn.error:
+            cursor.execute('ROLLBACK')
+            return False

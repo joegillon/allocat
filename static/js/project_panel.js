@@ -46,8 +46,10 @@ var projectListCtlr = {
   },
 
   selected: function(id) {
-    projectFormCtlr.load($$("projectList").getItem(id));
+    var prj = $$("projectList").getItem(id);
+    projectFormCtlr.load(prj);
     assignmentListCtlr.load(id);
+    selectedProject = prj;
   }
 
 };

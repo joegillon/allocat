@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify, render_template
 import json
 from models.project import Project
+from models.employee import Employee
+from models.assignment import Assignment
 
 
 prj = Blueprint('prj', __name__, url_prefix='/prj')
@@ -8,11 +10,14 @@ prj = Blueprint('prj', __name__, url_prefix='/prj')
 
 @prj.route('/list', methods=['GET'])
 def prj_list():
-    data = Project.get_all()
+    projects = Project.get_all()
+    emp_rex = Employee.get_all()
+    employees = [{'id': employee['id'], 'value': employee['name']} for employee in emp_rex]
     return render_template(
         'projects.html',
         title='allocat projects',
-        data=data
+        projects=projects,
+        employees=employees
     )
 
 
@@ -48,3 +53,16 @@ def prj_drop():
     data = Project.get_all()
     return jsonify(projects=data)
 
+
+@prj.route('/save_assignment', methods=['POST'])
+def prj_save_assignment():
+    values = json.loads(request.form['params'])
+    if values['id']:
+        numrows = Assignment.update(values)
+        return jsonify(numrows=numrows)
+    asnid = Assignment.add(values)
+    assignments = Assignment.get_for_project(values['project_id'])
+    return jsonify(
+        asnid=asnid,
+        assignments=assignments
+    )

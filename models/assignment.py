@@ -5,27 +5,6 @@ from models.dao import Dao
 
 class Assignment(object):
 
-    def __init__(self, d=None):
-        self.id = None
-        self.employee_id = None
-        self.project_id = None
-        self.first_month = None
-        self.last_month = None
-        self.timeframe = None
-        self.effort = None
-        if d:
-            self.__from_dict(d)
-
-    def __from_dict(self, d):
-        self.id = d['id']
-        self.employee_id = d['employee_id']
-        self.project_id = d['project_id']
-        self.first_month = Monkey(d['first_month'])
-        self.last_month = Monkey(d['last_month'])
-        self.timeframe = Timeframe(self.first_month, self.last_month)
-        self.effort = d['effort']
-        self.notes = d['notes']
-
     @staticmethod
     def get_for_project(prjid, month=None):
         sql = ("SELECT a.id AS id, "
@@ -45,4 +24,51 @@ class Assignment(object):
                     "AND a.last_month >= ? ")
             vals += [month, month]
         sql += "ORDER BY e.name;"
+        return Dao.execute(sql, vals)
+
+    @staticmethod
+    def get_for_employee(empid, month=None):
+        sql = ("SELECT a.id AS id, "
+               "a.project_id AS prjid, "
+               "a.first_month AS first_month, "
+               "a.last_month AS last_month, "
+               "a.effort AS effort, "
+               "a.notes AS notes, "
+               "p.nickname AS project "
+               "FROM assignments AS a "
+               "JOIN projects AS p "
+               "ON a.project_id= p.id "
+               "WHERE a.employee_id=? ")
+        vals = [empid]
+        if month:
+            sql += ("AND a.first_month <= ? "
+                    "AND a.last_month >= ? ")
+            vals += [month, month]
+        sql += "ORDER BY p.nickname;"
+        return Dao.execute(sql, vals)
+
+    @staticmethod
+    def add(d):
+        del d['id']
+        sql = "INSERT INTO assignments (%s) VALUES (%s);" % (
+            ','.join(d.keys()), '?' + ',?' * (len(d) - 1)
+        )
+        vals = list(d.values())
+        return Dao.execute(sql, vals)
+
+    @staticmethod
+    def update(d):
+        asnid = d['id']
+        del d['id']
+        sql = ("UPDATE assignments "
+               "SET %s "
+               "WHERE id=?;") % (
+            ','.join(f + '=?' for f in d.keys()))
+        vals = list(d.values()) + [asnid]
+        return Dao.execute(sql, vals)
+
+    @staticmethod
+    def delete(asnid):
+        sql = "DELETE FROM assignments WHERE id=%s;"
+        vals = [asnid]
         return Dao.execute(sql, vals)

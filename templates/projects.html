@@ -8,7 +8,8 @@
   {{ super() }}
 
   <script type="text/javascript">
-    var projects = {{ data|tojson }};
+    var projects = {{ projects|tojson }};
+    var employees = {{ employees|tojson }};
   </script>
 
   <script src="{{ url_for('static', filename='js/monkey.js') }}"></script>
@@ -29,7 +30,9 @@
       });
 
       projectPanelCtlr.init();
-      assignmentPanelCtlr.init();
+      assignmentPanelCtlr.initForProject();
+
+      var selectedProject = null;
     });
 
   </script>

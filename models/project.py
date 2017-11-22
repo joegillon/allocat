@@ -32,7 +32,9 @@ class Project(object):
         return Dao.execute(sql, vals)
 
     @staticmethod
-    def delete(id):
-        sql = "DELETE FROM projects WHERE id=?;"
-        vals = [id]
-        return Dao.execute(sql, vals)
+    def delete(prjid):
+        sqls = [
+            "DELETE FROM assignments WHERE project_id=%s;" % (prjid,),
+            "DELETE FROM projects WHERE id=%s;" % (prjid,)
+        ]
+        return Dao.transaction(sqls)
