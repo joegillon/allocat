@@ -66,3 +66,13 @@ def prj_save_assignment():
         asnid=asnid,
         assignments=assignments
     )
+
+
+@prj.route('/drop_assignment', methods=['POST'])
+def prj_drop_assignment():
+    asn = json.loads(request.form['params'])
+    numrows = Assignment.delete(asn['id'])
+    assignments = Assignment.get_for_project(asn['project_id'])
+    return jsonify(
+        assignments=assignments
+    )

@@ -1,61 +1,71 @@
 /**
- * Created by Joe on 11/17/2017.
+ * Created by Joe on 11/23/2017.
  */
 
 /*=====================================================================
-Assignment List
+Project Assignment List
 =====================================================================*/
-var assignmentList = {
+var projectAssignmentList = {
   view: "list",
-  id: "assignmentList",
+  id: "projectAssignmentList",
   select: true,
   height: 500,
   width: 200,
   template: "#employee#: #effort#",
   click: function(id) {
-    assignmentFormCtlr.load(this.getItem(id));
+    projectAssignmentFormCtlr.load(this.getItem(id));
   }
 };
 
 /*=====================================================================
-Assignment List Controller
+Project Assignment List Controller
 =====================================================================*/
-var assignmentListCtlr = {
-  init: function() {},
+var projectAssignmentListCtlr = {
+  list: null,
 
-  clear: function() {
-    $$("assignmentList").clearAll();
-    assignmentFormCtlr.clear();
+  init: function() {
+    this.list = $$("projectAssignmentList");
   },
 
-  loadForProject: function(prjid) {
-    this.clear();
+  clear: function() {
+    this.list.clearAll();
+    projectAssignmentFormCtlr.clear();
+  },
+
+  filter: function(value) {
+    this.list.filter(function(obj) {
+      //noinspection JSUnresolvedVariable
+      return obj.employee.toLowerCase().indexOf(value) == 0;
+    })
+  },
+
+  loadFromDB: function(prjid) {
     //noinspection JSUnresolvedVariable,JSUnresolvedFunction
     var url = Flask.url_for('prj.prj_assignments', {prjid: prjid});
 
     ajaxDao.get(url, function(data) {
-      $$("assignmentList").parse(data["assignments"]);
+      this.load(data['assignments']);
     });
   },
 
-  loadAssignments: function(assignments) {
+  load: function(assignments) {
     this.clear();
-    $$("assignmentList").parse(assignments);
+    this.list.parse(assignments);
   },
 
   select: function (id) {
-    $$("assignmentList").select(id);
-    $$("assignmentList").showItem(id);
+    this.list.select(id);
+    this.list.showItem(id);
   }
 
 };
 
 /*=====================================================================
-Assignment List Toolbar
+Project Assignment List Toolbar
 =====================================================================*/
-var assignmentListToolbar = {
+var projectAssignmentListToolbar = {
   view: "toolbar",
-  id: "assignmentListToolbar",
+  id: "projectAssignmentListToolbar",
   height: 70,
   rows: [
     {
@@ -69,7 +79,7 @@ var assignmentListToolbar = {
           id: "addButton",
           value: "Add",
           click: function() {
-            assignmentListToolbarCtlr.add();
+            projectAssignmentListToolbarCtlr.add();
           }
         }
       ]
@@ -80,7 +90,7 @@ var assignmentListToolbar = {
       width: 200,
       on: {
         onTimedKeyPress: function() {
-          assignmentListToolbarCtlr.filter(this.getValue().toLowerCase());
+          projectAssignmentListToolbarCtlr.filter(this.getValue().toLowerCase());
         }
       }
     }
@@ -88,17 +98,21 @@ var assignmentListToolbar = {
 };
 
 /*=====================================================================
-Assignment List Toolbar Controller
+Project Assignment List Toolbar Controller
 =====================================================================*/
 var assignmentListToolbarCtlr = {
-  init: function() {},
+  toolbar: null,
+
+  init: function() {
+    this.toolbar = $$("projectAssignmentListToolbar");
+  },
 
   add: function() {
-    assignmentFormCtlr.clear();
+    projectAssignmentFormCtlr.clear();
   },
 
   filter: function(value) {
-    $$("assignmentList").filter(function(obj) {
+    $$("projectAssignmentList").filter(function(obj) {
       //noinspection JSUnresolvedVariable
       return obj.employee.toLowerCase().indexOf(value) == 0;
     })
@@ -122,33 +136,7 @@ var projectAssignmentFormElements = [
     name: "project",
     width: 300,
     readonly: true
-  }
-];
-
-/*=====================================================================
-Employee Assignment Form Elements
-=====================================================================*/
-var employeeAssignmentFormElements = [
-  {
-    view: "text",
-    label: "Employee",
-    name: "employee",
-    width: 300,
-    readonly: true
   },
-  {
-    view: "combo",
-    label: "Project",
-    name: "project",
-    width: 300,
-    options: projects
-  }
-];
-
-/*=====================================================================
-Assignment Form Elements
-=====================================================================*/
-var assignmentFormElements = [
   {
     view: "text",
     label: "First Month",
@@ -180,7 +168,7 @@ var assignmentFormElements = [
     value: "Save",
     type: "form",
     click: function() {
-      assignmentFormCtlr.save();
+      projectAssignmentFormCtlr.save();
     }
   },
   {
@@ -188,18 +176,18 @@ var assignmentFormElements = [
     value: "Remove",
     type: "danger",
     click: function() {
-      assignmentFormCtlr.remove(this.getParentView().getValues().id);
+      projectAssignmentFormCtlr.remove(this.getParentView().getValues().id);
     }
   }
 ];
 
 /*=====================================================================
-Assignment Form
+Project Assignment Form
 =====================================================================*/
-var assignmentForm = {
+var projectAssignmentForm = {
   view: "form",
-  id: "assignmentForm",
-  elements: assignmentFormElements,
+  id: "projectAssignmentForm",
+  elements: projectAssignmentFormElements,
   rules: {
     "first_month": MonKey.isValidInput,
     "last_month": MonKey.isValidInput,
@@ -210,32 +198,24 @@ var assignmentForm = {
 };
 
 /*=====================================================================
-Assignment Form Controller
+Project Assignment Form Controller
 =====================================================================*/
-var assignmentFormCtlr = {
-  initForProject: function() {
-    for (var i=0; i<projectAssignmentFormElements.length; i++) {
-      $$("assignmentForm").addView(projectAssignmentFormElements[i], i);
-    }
-    $$("assignmentForm").refresh();
-  },
+var projectAssignmentFormCtlr = {
+  frm: null,
 
-  initForEmployee: function() {
-    for (var i=0; i<employeeAssignmentFormElements.length; i++) {
-      $$("assignmentForm").addView(employeeAssignmentFormElements[i], i);
-    }
-    $$("assignmentForm").refresh();
+  init: function() {
+    this.frm = $$("projectAssignmentForm");
   },
 
   clear: function() {
-    $$("assignmentForm").clear();
+    this.frm.clear();
     if (selectedProject) {
-      $$("assignmentForm").setValues({project: selectedProject.nickname});
+      this.frm.setValues({project: selectedProject.nickname});
     }
   },
 
   load: function(asn) {
-    $$("assignmentForm").setValues({
+    this.frm.setValues({
       project: selectedProject.nickname,
       first_month: MonKey.prettify(asn.first_month),
       last_month: MonKey.prettify(asn.last_month),
@@ -246,15 +226,14 @@ var assignmentFormCtlr = {
       project_id: asn.project_id
     });
     //noinspection JSUnresolvedVariable
-    $$("assignmentForm").getChildViews()[0].setValue(asn.empid);
+    this.frm.getChildViews()[0].setValue(asn.empid);
   },
 
   save: function() {
-    var frm = $$("assignmentForm");
-    if (!frm.validate()) {
+    if (!this.frm.validate()) {
       return;
     }
-    var values = frm.getValues({hidden: true});
+    var values = this.frm.getValues({hidden: true});
     values.first_month = MonKey.uglify(values.first_month);
     values.last_month = MonKey.uglify(values.last_month);
     if (!MonKey.isValidSpan(values.first_month, values.last_month)) {
@@ -306,11 +285,11 @@ var assignmentFormCtlr = {
 };
 
 /*=====================================================================
-Assignment Form Toolbar
+Project Assignment Form Toolbar
 =====================================================================*/
-var assignmentFormToolbar = {
+var projectAssignmentFormToolbar = {
   view: "toolbar",
-  id: "assignmentFormToolbar",
+  id: "projectAssignmentFormToolbar",
   height: 35,
   cols: [
     {view: "label", label: "Assignment Details"}
@@ -318,53 +297,42 @@ var assignmentFormToolbar = {
 };
 
 /*=====================================================================
-Assignment Form Toolbar Controller
+Project Assignment Form Toolbar Controller
 =====================================================================*/
-var assignmentFormToolbarCtlr = {
+var projectAssignmentFormToolbarCtlr = {
   init: function() {}
 };
 
 /*=====================================================================
-Assignment Panel
+Project Assignment Panel
 =====================================================================*/
-var assignmentPanel = {
+var projectAssignmentPanel = {
   type: "space",
   css: "panel_layout",
   cols: [
     {
-      rows: [assignmentListToolbar, assignmentList]
+      rows: [projectAssignmentListToolbar, projectAssignmentList]
     },
     {
-      rows: [assignmentFormToolbar, assignmentForm]
+      rows: [projectAssignmentFormToolbar, projectAssignmentForm]
     }
   ]
 };
 
 /*=====================================================================
-Assignment Panel Controller
+Project Assignment Panel Controller
 =====================================================================*/
-var assignmentPanelCtlr = {
-
-  initForProject: function() {
-    this.init();
-    assignmentListCtlr.load = assignmentListCtlr.loadForProject;
-    assignmentFormCtlr.initForProject();
-  },
-
-  initForEmployee: function() {
-    this.init();
-    assignmentFormCtlr.initForEmployee();
-  },
+var projectAssignmentPanelCtlr = {
 
   init: function() {
-    assignmentListCtlr.init();
+    projectAssignmentListCtlr.init();
     assignmentListToolbarCtlr.init();
     assignmentFormToolbarCtlr.init();
   },
 
   clear: function() {
-    assignmentListCtlr.clear();
-    assignmentFormCtlr.clear();
+    projectAssignmentListCtlr.clear();
+    projectAssignmentFormCtlr.clear();
   }
 
 };

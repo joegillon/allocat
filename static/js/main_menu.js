@@ -39,6 +39,7 @@ var mainMenu = {
   view: "menu",
   id: "mainMenu",
   data: menu_data,
+  //css: "menu_bar",
   type: {
     subsign: true,
     height: 40

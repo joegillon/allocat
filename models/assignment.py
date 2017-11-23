@@ -20,9 +20,8 @@ class Assignment(object):
                "WHERE a.project_id=? ")
         vals = [prjid]
         if month:
-            sql += ("AND a.first_month <= ? "
-                    "AND a.last_month >= ? ")
-            vals += [month, month]
+            sql += "AND a.last_month >= ? "
+            vals += [month]
         sql += "ORDER BY e.name;"
         return Dao.execute(sql, vals)
 

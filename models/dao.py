@@ -37,8 +37,8 @@ class Dao(object):
     def transaction(sqls):
         cxn = sqlite3.connect(dbfile)
         cxn.isolation_level = None
+        cursor = cxn.cursor()
         try:
-            cursor = cxn.cursor()
             cursor.execute('BEGIN')
             for sql in sqls:
                 cursor.execute(sql)

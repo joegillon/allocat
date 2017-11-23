@@ -10,6 +10,7 @@
   <script type="text/javascript">
     var projects = {{ projects|tojson }};
     var employees = {{ employees|tojson }};
+    var selectedProject = {};
   </script>
 
   <script src="{{ url_for('static', filename='js/monkey.js') }}"></script>
@@ -32,7 +33,6 @@
       projectPanelCtlr.init();
       assignmentPanelCtlr.initForProject();
 
-      var selectedProject = null;
     });
 
   </script>

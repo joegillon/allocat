@@ -25,31 +25,31 @@ var projectList = {
 /*=====================================================================
 Project List Controller
 =====================================================================*/
-var projectListCtlr = {
-  init: function() {
+var projectListCtlr;
+projectListCtlr = {
+  init: function () {
     this.load(projects);
   },
 
-  clear: function() {
+  clear: function () {
     $$("projectList").clearAll();
     projectListToolbarCtlr.clearFilter();
   },
 
-  load: function(data) {
+  load: function (data) {
     this.clear();
     $$("projectList").parse(data);
   },
 
-  select: function(id) {
+  select: function (id) {
     $$("projectList").select(id);
     $$("projectList").showItem(id);
   },
 
-  selected: function(id) {
-    var prj = $$("projectList").getItem(id);
-    projectFormCtlr.load(prj);
+  selected: function (id) {
+    selectedProject = $$("projectList").getItem(id);
+    projectFormCtlr.load(selectedProject);
     assignmentListCtlr.load(id);
-    selectedProject = prj;
   }
 
 };
@@ -218,12 +218,12 @@ var projectFormCtlr = {
 
     ajaxDao.post(url, values, function(data) {
       if (data["numrows"]) {
-        webix.message("Record updated!");
+        webix.message("Project updated!");
         return;
       }
       projectListCtlr.load(data["projects"]);
       projectListCtlr.select(data["prjid"]);
-      webix.message("Record added!");
+      webix.message("Project added!");
     });
 
   },
@@ -236,7 +236,7 @@ var projectFormCtlr = {
       projectListCtlr.load(data["projects"]);
       projectFormCtlr.clear();
       assignmentPanelCtlr.clear();
-      webix.message("Record removed!");
+      webix.message("Project removed!");
     });
   }
 };
@@ -265,6 +265,7 @@ Project Panel
 =====================================================================*/
 var projectPanel = {
   type: "space",
+  css: "panel_layout",
   cols: [
     {
       rows: [projectListToolbar, projectList]

@@ -15,4 +15,14 @@
     color: white;
 }
 
-.webix_layout_space,.webix_layout_wide{background-color:teal}
+.webix_layout_space,.webix_layout_wide {
+    background-color: darkslategray;
+}
+
+.panel_layout {
+    background-color: lightslategray;
+}
+
+.menu_bar {
+    background-color: #0d0d0d;
+}
