@@ -42,9 +42,10 @@ var projectAssignmentListCtlr = {
   loadFromDB: function(prjid) {
     //noinspection JSUnresolvedVariable,JSUnresolvedFunction
     var url = Flask.url_for('prj.prj_assignments', {prjid: prjid});
+    var me = this;
 
     ajaxDao.get(url, function(data) {
-      this.load(data['assignments']);
+      me.load(data['assignments']);
     });
   },
 
@@ -79,7 +80,7 @@ var projectAssignmentListToolbar = {
           id: "addButton",
           value: "Add",
           click: function() {
-            projectAssignmentListToolbarCtlr.add();
+            projectAssignmentFormCtlr.clear();
           }
         }
       ]
@@ -90,33 +91,11 @@ var projectAssignmentListToolbar = {
       width: 200,
       on: {
         onTimedKeyPress: function() {
-          projectAssignmentListToolbarCtlr.filter(this.getValue().toLowerCase());
+          projectAssignmentListCtlr.filter(this.getValue().toLowerCase());
         }
       }
     }
   ]
-};
-
-/*=====================================================================
-Project Assignment List Toolbar Controller
-=====================================================================*/
-var assignmentListToolbarCtlr = {
-  toolbar: null,
-
-  init: function() {
-    this.toolbar = $$("projectAssignmentListToolbar");
-  },
-
-  add: function() {
-    projectAssignmentFormCtlr.clear();
-  },
-
-  filter: function(value) {
-    $$("projectAssignmentList").filter(function(obj) {
-      //noinspection JSUnresolvedVariable
-      return obj.employee.toLowerCase().indexOf(value) == 0;
-    })
-  }
 };
 
 /*=====================================================================
@@ -223,10 +202,10 @@ var projectAssignmentFormCtlr = {
       notes: asn.notes,
       id: asn.id,
       employee_id: asn.employee_id,
-      project_id: asn.project_id
+      project_id: selectedProject.id
     });
     //noinspection JSUnresolvedVariable
-    this.frm.getChildViews()[0].setValue(asn.empid);
+    this.frm.getChildViews()[0].setValue(asn.employee_id);
   },
 
   save: function() {
@@ -243,41 +222,39 @@ var projectAssignmentFormCtlr = {
 
     // Timeframe must be inside project Timeframe
 
-    var route = "";
-    if (selectedProject) {
-      route = "prj.prj_";
-      values["employee_id"] = values["employee"];
-      values["project_id"] = selectedProject["id"];
-    } else {
-      route = "emp.emp_";
-      values["employee_id"] = selectedEmployee["id"];
-      values["project_id"] = values["project"];
-    }
+    values["employee_id"] = values["employee"];
+    values["project_id"] = selectedProject["id"];
 
     delete values["employee"];
     delete values["project"];
 
     //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-    var url = Flask.url_for(route + "save_assignment");
+    var url = Flask.url_for("prj.prj_save_assignment");
 
     ajaxDao.post(url, values, function(data) {
       if (data["numrows"]) {
         webix.message("Assignment updated!");
         return;
       }
-      assignmentListCtlr.load(data["assignments"]);
-      assignmentListCtlr.select(data["asnid"]);
+      projectAssignmentListCtlr.load(data["assignments"]);
+      projectAssignmentListCtlr.select(data["asnid"]);
       webix.message("Assignment added!");
     });
 
   },
 
   remove: function(id) {
+    var inputs = this.frm.getValues({hidden: true});
+    var values = {
+      id: inputs["id"],
+      project_id: inputs["project_id"]
+    }
+
     //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-    var url = Flask.url_for(route + "drop_assignment");
+    var url = Flask.url_for("prj.prj_drop_assignment");
 
     ajaxDao.post(url, values, function(data) {
-      assignmentListCtlr.load(data["assignments"]);
+      projectAssignmentListCtlr.load(data["assignments"]);
       webix.message("Assignment removed!");
     });
   }
@@ -294,13 +271,6 @@ var projectAssignmentFormToolbar = {
   cols: [
     {view: "label", label: "Assignment Details"}
   ]
-};
-
-/*=====================================================================
-Project Assignment Form Toolbar Controller
-=====================================================================*/
-var projectAssignmentFormToolbarCtlr = {
-  init: function() {}
 };
 
 /*=====================================================================
@@ -326,8 +296,7 @@ var projectAssignmentPanelCtlr = {
 
   init: function() {
     projectAssignmentListCtlr.init();
-    assignmentListToolbarCtlr.init();
-    assignmentFormToolbarCtlr.init();
+    projectAssignmentFormCtlr.init();
   },
 
   clear: function() {

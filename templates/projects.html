@@ -16,7 +16,7 @@
   <script src="{{ url_for('static', filename='js/monkey.js') }}"></script>
   <script src="{{ url_for('static', filename='js/ajax_dao.js') }}"></script>
   <script src="{{ url_for('static', filename='js/project_panel.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/assignment_panel.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/project_assignment_panel.js') }}"></script>
 
   <script type="text/javascript" charset="utf-8">
 
@@ -26,12 +26,12 @@
         container: "content_container",
         type: "space",
         cols: [
-            projectPanel, assignmentPanel
+            projectPanel, projectAssignmentPanel
         ]
       });
 
       projectPanelCtlr.init();
-      assignmentPanelCtlr.initForProject();
+      projectAssignmentPanelCtlr.init();
 
     });
 

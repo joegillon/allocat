@@ -25,33 +25,50 @@ var projectList = {
 /*=====================================================================
 Project List Controller
 =====================================================================*/
-var projectListCtlr;
-projectListCtlr = {
+var projectListCtlr = {
+  list: null,
+  filtrStr: "",
+  filtrCtl: null,
+
   init: function () {
+    this.list = $$("projectList");
+    this.filtrCtl = $$("projectFilter");
     this.load(projects);
   },
 
   clear: function () {
-    $$("projectList").clearAll();
-    projectListToolbarCtlr.clearFilter();
+    this.list.clearAll();
+    this.filtrStr = this.filtrCtl.getValue();
+    this.filtrCtl.setValue("");
   },
 
   load: function (data) {
     this.clear();
-    $$("projectList").parse(data);
+    this.list.parse(data);
   },
 
   select: function (id) {
-    $$("projectList").select(id);
-    $$("projectList").showItem(id);
+    this.list.select(id);
+    this.filter(this.filtrStr);
+    this.list.showItem(id);
   },
 
   selected: function (id) {
-    selectedProject = $$("projectList").getItem(id);
+    selectedProject = this.list.getItem(id);
     projectFormCtlr.load(selectedProject);
-    assignmentListCtlr.load(id);
-  }
+    projectAssignmentListCtlr.loadFromDB(id);
+  },
 
+  filter: function(value) {
+    this.list.filter(function(obj) {
+      return obj.nickname.toLowerCase().indexOf(value) == 0;
+    })
+  },
+
+  add: function() {
+    projectFormCtlr.clear();
+    projectAssignmentPanelCtlr.clear();
+  }
 };
 
 /*=====================================================================
@@ -73,7 +90,7 @@ var projectListToolbar = {
           value: "Add",
           css: "add_button",
           click: function() {
-            projectListToolbarCtlr.add();
+            projectListCtlr.add();
           }
         }
       ]
@@ -85,33 +102,11 @@ var projectListToolbar = {
       width: 200,
       on: {
         onTimedKeyPress: function() {
-          projectListToolbarCtlr.filter(this.getValue().toLowerCase());
+          projectListCtlr.filter(this.getValue().toLowerCase());
         }
       }
     }
   ]
-};
-
-/*=====================================================================
-Project List Toolbar Controller
-=====================================================================*/
-var projectListToolbarCtlr = {
-  init: function() {},
-
-  add: function() {
-    projectFormCtlr.clear();
-    assignmentPanelCtlr.clear();
-  },
-
-  filter: function(value) {
-    $$("projectList").filter(function(obj) {
-        return obj.nickname.toLowerCase().indexOf(value) == 0;
-    })
-  },
-
-  clearFilter: function() {
-    $$("projectFilter").setValue("");
-  }
 };
 
 /*=====================================================================
@@ -183,14 +178,18 @@ var projectForm = {
 Project Form Controller
 =====================================================================*/
 var projectFormCtlr = {
-  init: function() {},
+  frm: null,
+
+  init: function() {
+    this.frm = $$("projectForm");
+  },
 
   clear: function() {
-    $$("projectForm").clear();
+    this.frm.clear();
   },
 
   load: function(prj) {
-    $$("projectForm").setValues({
+    this.frm.setValues({
       id: prj.id,
       name: prj.name,
       nickname: prj.nickname,
@@ -201,11 +200,10 @@ var projectFormCtlr = {
   },
 
   save: function() {
-    var frm = $$("projectForm");
-    if (!frm.validate()) {
+    if (!this.frm.validate()) {
       return;
     }
-    var values = frm.getValues({hidden: true});
+    var values = this.frm.getValues({hidden: true});
     values.first_month = MonKey.uglify(values.first_month);
     values.last_month = MonKey.uglify(values.last_month);
     if (!MonKey.isValidSpan(values.first_month, values.last_month)) {
@@ -217,13 +215,9 @@ var projectFormCtlr = {
     var url = Flask.url_for("prj.prj_save");
 
     ajaxDao.post(url, values, function(data) {
-      if (data["numrows"]) {
-        webix.message("Project updated!");
-        return;
-      }
       projectListCtlr.load(data["projects"]);
       projectListCtlr.select(data["prjid"]);
-      webix.message("Project added!");
+      webix.message("Project saved!");
     });
 
   },
@@ -235,7 +229,7 @@ var projectFormCtlr = {
     ajaxDao.get(url, function(data) {
       projectListCtlr.load(data["projects"]);
       projectFormCtlr.clear();
-      assignmentPanelCtlr.clear();
+      projectAssignmentPanelCtlr.clear();
       webix.message("Project removed!");
     });
   }
@@ -251,13 +245,6 @@ var projectFormToolbar = {
   cols: [
     {view: "label", label: "Project Details"}
   ]
-};
-
-/*=====================================================================
-Project Form Toolbar Controller
-=====================================================================*/
-var projectFormToolbarCtlr = {
-  init: function() {}
 };
 
 /*=====================================================================
@@ -283,9 +270,7 @@ var projectPanelCtlr = {
 
   init: function() {
     projectListCtlr.init();
-    projectListToolbarCtlr.init();
     projectFormCtlr.init();
-    projectFormToolbarCtlr.init();
   }
 
 };

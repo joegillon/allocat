@@ -36,9 +36,10 @@ def prj_assignments():
 def prj_save():
     values = json.loads(request.form['params'])
     if values['id']:
+        prjid = values['id']
         numrows = Project.update(values)
-        return jsonify(numrows=numrows)
-    prjid = Project.add(values)
+    else:
+        prjid = Project.add(values)
     projects = Project.get_all()
     return jsonify(
         prjid=prjid,
@@ -48,7 +49,7 @@ def prj_save():
 
 @prj.route('/remove', methods=['GET'])
 def prj_drop():
-    prjid = json.loads(request.args['prjid'])
+    prjid = json.loads(request.args['project_id'])
     result = Project.delete(prjid)
     data = Project.get_all()
     return jsonify(projects=data)

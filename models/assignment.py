@@ -8,7 +8,7 @@ class Assignment(object):
     @staticmethod
     def get_for_project(prjid, month=None):
         sql = ("SELECT a.id AS id, "
-               "a.employee_id AS empid, "
+               "a.employee_id AS employee_id, "
                "a.first_month AS first_month, "
                "a.last_month AS last_month, "
                "a.effort AS effort, "
@@ -28,7 +28,7 @@ class Assignment(object):
     @staticmethod
     def get_for_employee(empid, month=None):
         sql = ("SELECT a.id AS id, "
-               "a.project_id AS prjid, "
+               "a.project_id AS project_id, "
                "a.first_month AS first_month, "
                "a.last_month AS last_month, "
                "a.effort AS effort, "
@@ -68,6 +68,6 @@ class Assignment(object):
 
     @staticmethod
     def delete(asnid):
-        sql = "DELETE FROM assignments WHERE id=%s;"
+        sql = "DELETE FROM assignments WHERE id=?;"
         vals = [asnid]
         return Dao.execute(sql, vals)
