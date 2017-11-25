@@ -11,7 +11,7 @@ var projectAssignmentList = {
   select: true,
   height: 500,
   width: 200,
-  template: "#employee#: #effort#",
+  template: "#employee#",
   click: function(id) {
     projectAssignmentFormCtlr.load(this.getItem(id));
   }
@@ -22,21 +22,18 @@ Project Assignment List Controller
 =====================================================================*/
 var projectAssignmentListCtlr = {
   list: null,
+  filtrStr: "",
+  filtrCtl: null,
 
   init: function() {
     this.list = $$("projectAssignmentList");
+    this.filtrCtl = $$("projectAssignmentFilter");
   },
 
   clear: function() {
     this.list.clearAll();
+    this.filtrCtl.setValue("");
     projectAssignmentFormCtlr.clear();
-  },
-
-  filter: function(value) {
-    this.list.filter(function(obj) {
-      //noinspection JSUnresolvedVariable
-      return obj.employee.toLowerCase().indexOf(value) == 0;
-    })
   },
 
   loadFromDB: function(prjid) {
@@ -50,13 +47,23 @@ var projectAssignmentListCtlr = {
   },
 
   load: function(assignments) {
+    this.filtrStr = this.filtrCtl.getValue();
     this.clear();
     this.list.parse(assignments);
-  },
+    this.filtrCtl.setValue(this.filtrStr);
+    this.filter(this.filtrStr);
+},
 
   select: function (id) {
     this.list.select(id);
     this.list.showItem(id);
+  },
+
+  filter: function(value) {
+    this.list.filter(function(obj) {
+      //noinspection JSUnresolvedVariable
+      return obj.employee.toLowerCase().indexOf(value) == 0;
+    })
   }
 
 };
@@ -87,6 +94,7 @@ var projectAssignmentListToolbar = {
     },
     {
       view: "text",
+      id: "projectAssignmentFilter",
       label: 'Filter',
       width: 200,
       on: {
@@ -107,7 +115,8 @@ var projectAssignmentFormElements = [
     label: "Employee",
     name: "employee",
     width: 300,
-    options: employees
+    options: employees,
+    invalidMessage: "Employee is required!"
   },
   {
     view: "text",
@@ -168,6 +177,7 @@ var projectAssignmentForm = {
   id: "projectAssignmentForm",
   elements: projectAssignmentFormElements,
   rules: {
+    "employee": webix.rules.isNotEmpty,
     "first_month": MonKey.isValidInput,
     "last_month": MonKey.isValidInput,
     "effort": function(value) {
@@ -209,15 +219,32 @@ var projectAssignmentFormCtlr = {
   },
 
   save: function() {
+    var values = this.validate();
+    if (!values) return;
+
+    var url = values["id"] ? "prj.prj_add_assignment": "prj.prj_update_assignment";
+
+    //noinspection JSUnresolvedVariable,JSUnresolvedFunction
+    var url = Flask.url_for(url);
+
+    ajaxDao.post(url, values, function(data) {
+      projectAssignmentListCtlr.load(data["assignments"]);
+      projectAssignmentListCtlr.select(data["asnid"]);
+      webix.message("Assignment saved!");
+    });
+
+  },
+
+  validate: function() {
     if (!this.frm.validate()) {
-      return;
+      return null;
     }
     var values = this.frm.getValues({hidden: true});
     values.first_month = MonKey.uglify(values.first_month);
     values.last_month = MonKey.uglify(values.last_month);
     if (!MonKey.isValidSpan(values.first_month, values.last_month)) {
-      webix.message({error: "First month must precede last month!"});
-      return;
+      webix.alert({type: "alert-error", text: "First month must precede last month!"});
+      return null;
     }
 
     // Timeframe must be inside project Timeframe
@@ -228,19 +255,7 @@ var projectAssignmentFormCtlr = {
     delete values["employee"];
     delete values["project"];
 
-    //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-    var url = Flask.url_for("prj.prj_save_assignment");
-
-    ajaxDao.post(url, values, function(data) {
-      if (data["numrows"]) {
-        webix.message("Assignment updated!");
-        return;
-      }
-      projectAssignmentListCtlr.load(data["assignments"]);
-      projectAssignmentListCtlr.select(data["asnid"]);
-      webix.message("Assignment added!");
-    });
-
+    return values;
   },
 
   remove: function(id) {
@@ -248,7 +263,7 @@ var projectAssignmentFormCtlr = {
     var values = {
       id: inputs["id"],
       project_id: inputs["project_id"]
-    }
+    };
 
     //noinspection JSUnresolvedVariable,JSUnresolvedFunction
     var url = Flask.url_for("prj.prj_drop_assignment");

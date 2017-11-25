@@ -13,11 +13,8 @@ var projectList = {
   width: 200,
   template: "#nickname#",
   on: {
-    onItemClick: function(id) {
-      projectListCtlr.selected(id);
-    },
-    onSelectChange: function(id) {
-      projectListCtlr.selected(id);
+    onAfterSelect: function() {
+      projectListCtlr.selected();
     }
   }
 };
@@ -38,25 +35,26 @@ var projectListCtlr = {
 
   clear: function () {
     this.list.clearAll();
-    this.filtrStr = this.filtrCtl.getValue();
     this.filtrCtl.setValue("");
   },
 
   load: function (data) {
+    this.filtrStr = this.filtrCtl.getValue();
     this.clear();
     this.list.parse(data);
+    this.filtrCtl.setValue(this.filtrStr);
+    this.filter(this.filtrStr);
   },
 
   select: function (id) {
     this.list.select(id);
-    this.filter(this.filtrStr);
     this.list.showItem(id);
   },
 
-  selected: function (id) {
-    selectedProject = this.list.getItem(id);
+  selected: function () {
+    selectedProject = this.list.getSelectedItem();
     projectFormCtlr.load(selectedProject);
-    projectAssignmentListCtlr.loadFromDB(id);
+    projectAssignmentListCtlr.loadFromDB(selectedProject.id);
   },
 
   filter: function(value) {
@@ -102,6 +100,9 @@ var projectListToolbar = {
       width: 200,
       on: {
         onTimedKeyPress: function() {
+          selectedProject = null;
+          projectFormCtlr.clear();
+          projectAssignmentPanelCtlr.clear();
           projectListCtlr.filter(this.getValue().toLowerCase());
         }
       }
@@ -164,7 +165,7 @@ var projectForm = {
       click: function() {
         projectFormCtlr.remove(this.getParentView().getValues().id);
       }
-    },
+    }
   ],
   rules: {
     "name": webix.rules.isNotEmpty,
@@ -200,19 +201,13 @@ var projectFormCtlr = {
   },
 
   save: function() {
-    if (!this.frm.validate()) {
-      return;
-    }
-    var values = this.frm.getValues({hidden: true});
-    values.first_month = MonKey.uglify(values.first_month);
-    values.last_month = MonKey.uglify(values.last_month);
-    if (!MonKey.isValidSpan(values.first_month, values.last_month)) {
-      webix.message({error: "First month must precede last month!"});
-      return;
-    }
+    var values = this.validate();
+    if (!values) return;
+
+    var url = values["id"] ? "prj.prj_update" : "prj.prj_add";
 
     //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-    var url = Flask.url_for("prj.prj_save");
+    url = Flask.url_for(url);
 
     ajaxDao.post(url, values, function(data) {
       projectListCtlr.load(data["projects"]);
@@ -220,6 +215,20 @@ var projectFormCtlr = {
       webix.message("Project saved!");
     });
 
+  },
+
+  validate: function() {
+    if (!this.frm.validate()) {
+      return null;
+    }
+    var values = this.frm.getValues({hidden: true});
+    values.first_month = MonKey.uglify(values.first_month);
+    values.last_month = MonKey.uglify(values.last_month);
+    if (!MonKey.isValidSpan(values.first_month, values.last_month)) {
+      webix.alert({type: "alert-error", text: "First month must precede last month!"});
+      return null;
+    }
+    return values;
   },
 
   remove: function(id) {

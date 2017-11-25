@@ -21,6 +21,41 @@ def prj_list():
     )
 
 
+@prj.route('/add', methods=['POST'])
+def prj_add():
+    values = json.loads(request.form['params'])
+    try:
+        prjid = Project.add(values)
+    except Exception as ex:
+        return ex.message
+    return jsonify(prjid=prjid, projects=Project.get_all())
+
+
+@prj.route('/update', methods=['POST'])
+def prj_update():
+    values = json.loads(request.form['params'])
+    prjid = values['id']
+    try:
+        numrows = Project.update(values)
+        if numrows != 1:
+            msg = 'Record not updated for unknown reason. Contact admin.'
+            return jsonify(error=msg)
+    except Exception as ex:
+        return jsonify(error=str(ex))
+    return jsonify(prjid=prjid, projects=Project.get_all())
+
+
+@prj.route('/remove', methods=['GET'])
+def prj_drop():
+    prjid = json.loads(request.args['prjid'])
+    success = Project.delete(prjid)
+    if not success:
+        msg = 'Record not deleted for unknown reason. Contact admin.'
+        return jsonify(error=msg)
+    data = Project.get_all()
+    return jsonify(projects=data)
+
+
 @prj.route('/assignments', methods=['GET'])
 def prj_assignments():
     from models.assignment import Assignment
@@ -32,41 +67,27 @@ def prj_assignments():
     return jsonify(assignments=data)
 
 
-@prj.route('/save', methods=['POST'])
-def prj_save():
+@prj.route('/add_assignment', methods=['POST'])
+def prj_add_assignment():
     values = json.loads(request.form['params'])
-    if values['id']:
-        prjid = values['id']
-        numrows = Project.update(values)
-    else:
-        prjid = Project.add(values)
-    projects = Project.get_all()
-    return jsonify(
-        prjid=prjid,
-        projects=projects
-    )
-
-
-@prj.route('/remove', methods=['GET'])
-def prj_drop():
-    prjid = json.loads(request.args['project_id'])
-    result = Project.delete(prjid)
-    data = Project.get_all()
-    return jsonify(projects=data)
-
-
-@prj.route('/save_assignment', methods=['POST'])
-def prj_save_assignment():
-    values = json.loads(request.form['params'])
-    if values['id']:
-        numrows = Assignment.update(values)
-        return jsonify(numrows=numrows)
-    asnid = Assignment.add(values)
+    try:
+        asnid = Assignment.add(values)
+    except Exception as ex:
+        return jsonify(error=str(ex))
     assignments = Assignment.get_for_project(values['project_id'])
-    return jsonify(
-        asnid=asnid,
-        assignments=assignments
-    )
+    return jsonify(asnid=asnid, assignments=assignments)
+
+
+@prj.route('/update_assignment', methods=['POST'])
+def prj_update_assignment():
+    values = json.loads(request.form['params'])
+    asnid = values['id']
+    try:
+        asnid = Assignment.update(values)
+    except Exception as ex:
+        return jsonify(error=str(ex))
+    assignments = Assignment.get_for_project(values['project_id'])
+    return jsonify(asnid=asnid, assignments=assignments)
 
 
 @prj.route('/drop_assignment', methods=['POST'])
