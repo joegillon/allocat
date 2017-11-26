@@ -18,5 +18,11 @@ var MonKey = {
 
   isValidSpan: function(first, last) {
     return last >= first;
+  },
+
+  isInProjectTimeframe: function(project, assignment) {
+    if (assignment.first_month < project.first_month) return false;
+    if (assignment.last_month > project.last_month) return false;
+    return true;
   }
 };

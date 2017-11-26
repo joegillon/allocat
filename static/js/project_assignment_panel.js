@@ -123,7 +123,8 @@ var projectAssignmentFormElements = [
     label: "Project",
     name: "project",
     width: 300,
-    readonly: true
+    readonly: true,
+    invalidMessage: "No project has been selected!"
   },
   {
     view: "text",
@@ -177,11 +178,12 @@ var projectAssignmentForm = {
   id: "projectAssignmentForm",
   elements: projectAssignmentFormElements,
   rules: {
+    "project": webix.rules.isNotEmpty,
     "employee": webix.rules.isNotEmpty,
     "first_month": MonKey.isValidInput,
     "last_month": MonKey.isValidInput,
     "effort": function(value) {
-      return value >= 0 && value <= 100;
+      return projectAssignmentFormCtlr.isValidEffort(value);
     }
   }
 };
@@ -222,7 +224,7 @@ var projectAssignmentFormCtlr = {
     var values = this.validate();
     if (!values) return;
 
-    var url = values["id"] ? "prj.prj_add_assignment": "prj.prj_update_assignment";
+    var url = values["id"] ? "prj.prj_update_assignment": "prj.prj_add_assignment";
 
     //noinspection JSUnresolvedVariable,JSUnresolvedFunction
     var url = Flask.url_for(url);
@@ -233,6 +235,11 @@ var projectAssignmentFormCtlr = {
       webix.message("Assignment saved!");
     });
 
+  },
+
+  isValidEffort: function(value) {
+    var x = parseInt(value);
+      return x >= 0 && x <= 100;
   },
 
   validate: function() {
@@ -247,7 +254,10 @@ var projectAssignmentFormCtlr = {
       return null;
     }
 
-    // Timeframe must be inside project Timeframe
+    if (!MonKey.isInProjectTimeframe(selectedProject, values)) {
+      webix.alert({type: "alert-error", text: "Assignment time frame outside project time frame!"});
+      return null;
+    }
 
     values["employee_id"] = values["employee"];
     values["project_id"] = selectedProject["id"];

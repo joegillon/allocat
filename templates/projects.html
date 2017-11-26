@@ -10,7 +10,7 @@
   <script type="text/javascript">
     var projects = {{ projects|tojson }};
     var employees = {{ employees|tojson }};
-    var selectedProject = {};
+    var selectedProject = null;
   </script>
 
   <script src="{{ url_for('static', filename='js/monkey.js') }}"></script>
