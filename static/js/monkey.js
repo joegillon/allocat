@@ -22,7 +22,16 @@ var MonKey = {
 
   isInProjectTimeframe: function(project, assignment) {
     if (assignment.first_month < project.first_month) return false;
-    if (assignment.last_month > project.last_month) return false;
-    return true;
+    return assignment.last_month <= project.last_month;
+  },
+
+  buildProjectTimeframes: function() {
+    projectTimeframes = {};
+    for (var i=0; i<projects.length; i++) {
+      projectTimeframes[projects[i].id] = {
+        first_month: projects[i].first_month,
+        last_month: projects[i].last_month
+      }
+    }
   }
 };

@@ -236,6 +236,7 @@ var projectFormCtlr = {
     var url = Flask.url_for("prj.prj_drop", {prjid: id});
 
     ajaxDao.get(url, function(data) {
+      selectedProject = null;
       projectListCtlr.load(data["projects"]);
       projectFormCtlr.clear();
       projectAssignmentPanelCtlr.clear();

@@ -68,7 +68,7 @@ var mainMenu = {
       }
       if (id == "employees") {
         //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-        window.location.href = Flask.url_for('emp.list');
+        window.location.href = Flask.url_for('emp.emp_list');
         return;
       }
       if (id == "effort") {
