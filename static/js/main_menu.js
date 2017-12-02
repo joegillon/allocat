@@ -73,7 +73,7 @@ var mainMenu = {
       }
       if (id == "effort") {
         //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-        window.location.href = Flask.url_for("eff.eff_table");
+        window.location.href = Flask.url_for("eff.eff_page");
         return;
       }
       webix.message("Not yet implemented");

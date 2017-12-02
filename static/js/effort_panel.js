@@ -19,6 +19,7 @@ var effortGrid = {
   id: "effortGrid",
   autowidth: true,
   autoheight: true,
+  columns: effortGridCols,  // Don't know why this has to be here but...
   on: {
     onItemClick: function(id) {
       effortGridCtlr.showBreakdown(id.row, id.column);
@@ -34,17 +35,16 @@ var effortGridCtlr = {
 
   init: function() {
     this.grid = $$("effortGrid");
-    this.buildCols(months);
-    this.load(tbl.rows);
   },
 
   clear: function() {
     this.grid.clearAll();
   },
 
-  buildCols: function(months) {
+  buildCols: function() {
+    var columns = effortGridCols.slice();
     for (var i=0; i<months.length; i++) {
-      effortGridCols.push(
+      columns.push(
         {
           id: months[i],
           header: MonthLib.prettify(months[i]),
@@ -52,18 +52,21 @@ var effortGridCtlr = {
         }
       );
     }
-    this.grid.config.columns = effortGridCols;
+    this.grid.config.columns = columns;
+    this.grid.refreshColumns();
   },
 
-  load: function(data) {
-    this.grid.parse(data);
+  load: function() {
+    this.buildCols();
+    this.grid.clearAll();
+    this.grid.parse(tbl);
   },
 
   showBreakdown: function(row, col) {
     if (col == "name" || col == "fte") return;
     var breakdown = breakdowns[row + ":" + col];
     if (breakdown.length == 0) return;
-    var employee = this.grid.getItem(id).name;
+    var employee = this.grid.getItem(row).name;
     var month = MonthLib.prettify(col);
     breakdownPopupCtlr.show(employee, month, breakdown);
   }
@@ -80,6 +83,7 @@ var effortGridToolbar = {
       view: "text",
       name: "first_month",
       label: "Start",
+      width: 150,
       placeholder: "MM/YY",
       invalidMessage: "Month format is numeric MM/YY!"
     },
@@ -87,6 +91,7 @@ var effortGridToolbar = {
       view: "text",
       name: "last_month",
       label: "Thru",
+      width: 150,
       placeholder: "MM/YY",
       invalidMessage: "Month format is numeric MM/YY!"
     },
@@ -112,10 +117,24 @@ var effortGridToolbarCtlr = {
 
   init: function() {
     this.toolbar = $$("effortGridToolbar");
+    this.defaultTimeframe();
+    this.runQuery();
+  },
+
+  defaultTimeframe: function() {
+    var today = new Date();
+    var firstMo = today.getMonth() + 1;
+    var firstYr = today.getFullYear() - 2000;
+    var lastMo = firstMo + 12;
+    var lastYr = firstYr;
+    if (lastMo > 12) {
+      lastMo -= 12;
+      lastYr += 1;
+    }
     this.toolbar.setValues({
-      first_month: MonthLib.prettify(months[0]),
-      last_month: MonthLib.prettify(months[1])
-    })
+      first_month: MonthLib.prettify(firstYr.toString() + firstMo.toString()),
+      last_month: MonthLib.prettify(lastYr.toString() + lastMo.toString())
+    });
   },
 
   validate: function() {
@@ -129,18 +148,16 @@ var effortGridToolbarCtlr = {
     var values = this.validate();
     if (!values) return;
 
-    var requestedMonths = MonthLib.getMonthList(values);
-    if (requestedMonths.length == 0) return;
-
-    var newMonths = MonthLib.getNewMonths(months, requestedMonths);
-    if (newMonths.length == 0) return;
-
-
-  },
-
-  getMoreData: function() {
-
+    //noinspection JSUnresolvedVariable,JSUnresolvedFunction
+    var url = Flask.url_for("eff.eff_data", values);
+    ajaxDao.get(url, function(data) {
+      months = data["months"];
+      tbl = data["tbl"].rows;
+      breakdowns = data["breakdowns"];
+      effortGridCtlr.load();
+    });
   }
+
 };
 
 /*=====================================================================

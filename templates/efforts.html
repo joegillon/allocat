@@ -8,12 +8,11 @@
   {{ super() }}
 
   <script type="text/javascript">
-    var tbl = {{ tbl|tojson }};
-    var breakdowns = {{ breakdowns|tojson }}
-    var months = {{ months|tojson }};
+    var months = null;
+    var tbl = null;
+    var breakdowns = null;
   </script>
 
-  <script src="{{ url_for('static', filename='js/lib/lodash.js') }}"></script>
   <script src="{{ url_for('static', filename='js/month_lib.js') }}"></script>
   <script src="{{ url_for('static', filename='js/ajax_dao.js') }}"></script>
   <script src="{{ url_for('static', filename='js/effort_panel.js') }}"></script>
