@@ -63,3 +63,13 @@ class Monkey(object):
     def today():
         d = datetime.datetime.now()
         return '%02d%02d' % (d.year - 2000, d.month)
+
+    @staticmethod
+    def plus_six(month):
+        m = int(month[2:])
+        y = int(month[0:2])
+        m += 1
+        if m > 12:
+            m -= 12
+            y += 1
+        return '%02d%02d' % (y, m)

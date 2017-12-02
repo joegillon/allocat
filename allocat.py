@@ -2,12 +2,14 @@ from flask import Flask, render_template
 from flask_jsglue import JSGlue
 from views.projects import prj
 from views.employees import emp
+from views.efforts import eff
 
 app = Flask(__name__)
 jsglue = JSGlue(app)
 
 app.register_blueprint(prj)
 app.register_blueprint(emp)
+app.register_blueprint(eff)
 
 
 @app.route('/')

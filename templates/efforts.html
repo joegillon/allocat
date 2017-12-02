@@ -8,32 +8,33 @@
   {{ super() }}
 
   <script type="text/javascript">
-    var projects = {{ projects|tojson }};
-    var employees = {{ employees|tojson }};
-    var selectedEmployee = null;
-    var projectTimeframes = null;
+    var tbl = {{ tbl|tojson }};
+    var breakdowns = {{ breakdowns|tojson }}
+    var months = {{ months|tojson }};
   </script>
 
+  <script src="{{ url_for('static', filename='js/lib/lodash.js') }}"></script>
   <script src="{{ url_for('static', filename='js/month_lib.js') }}"></script>
   <script src="{{ url_for('static', filename='js/ajax_dao.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/employee_panel.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/employee_assignment_panel.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/effort_panel.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/breakdown_popup.js') }}"></script>
 
   <script type="text/javascript" charset="utf-8">
 
     webix.ready(function() {
 
+      webix.ui(breakdownPopup);
+
       webix.ui({
         container: "content_container",
         type: "space",
         cols: [
-            employeePanel, employeeAssignmentPanel
+            effortPanel
         ]
       });
 
-      employeePanelCtlr.init();
-      employeeAssignmentPanelCtlr.init();
-
+      effortPanelCtlr.init();
+      breakdownPopupCtlr.init();
     });
 
   </script>

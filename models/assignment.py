@@ -1,9 +1,25 @@
-from models.monkey import Monkey
-from models.timeframe import Timeframe
 from models.dao import Dao
 
 
 class Assignment(object):
+
+    @staticmethod
+    def get_for_timeframe(first_month, last_month):
+        sql = ("SELECT a.id AS id, "
+               "a.employee_id AS employee_id, "
+               "a.project_id AS project_id, "
+               "a.first_month AS first_month, "
+               "a.last_month AS last_month, "
+               "a.effort AS effort, "
+               "e.name AS employee, "
+               "p.nickname AS project "
+               "FROM assignments AS a "
+               "JOIN employees AS e ON a.employee_id=e.id "
+               "JOIN projects AS p ON a.project_id=p.id "
+               "WHERE a.first_month >= ? "
+               "AND a.last_month <= ?;")
+        vals = (first_month, last_month)
+        return Dao.execute(sql, vals)
 
     @staticmethod
     def get_for_project(prjid, month=None):
@@ -15,8 +31,7 @@ class Assignment(object):
                "a.notes AS notes, "
                "e.name AS employee "
                "FROM assignments AS a "
-               "JOIN employees AS e "
-               "ON a.employee_id= e.id "
+               "JOIN employees AS e ON a.employee_id= e.id "
                "WHERE a.project_id=? ")
         vals = [prjid]
         if month:

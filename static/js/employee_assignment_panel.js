@@ -180,8 +180,8 @@ var employeeAssignmentForm = {
   rules: {
     "employee": webix.rules.isNotEmpty,
     "project": webix.rules.isNotEmpty,
-    "first_month": MonKey.isValidInput,
-    "last_month": MonKey.isValidInput,
+    "first_month": MonthLib.isValidInput,
+    "last_month": MonthLib.isValidInput,
     "effort": function(value) {
       return employeeAssignmentFormCtlr.isValidEffort(value);
     }
@@ -208,8 +208,8 @@ var employeeAssignmentFormCtlr = {
   load: function(asn) {
     this.frm.setValues({
       employee: selectedEmployee.name,
-      first_month: MonKey.prettify(asn.first_month),
-      last_month: MonKey.prettify(asn.last_month),
+      first_month: MonthLib.prettify(asn.first_month),
+      last_month: MonthLib.prettify(asn.last_month),
       effort: asn.effort,
       notes: asn.notes,
       id: asn.id,
@@ -247,18 +247,18 @@ var employeeAssignmentFormCtlr = {
       return null;
     }
     var values = this.frm.getValues({hidden: true});
-    values.first_month = MonKey.uglify(values.first_month);
-    values.last_month = MonKey.uglify(values.last_month);
-    if (!MonKey.isValidSpan(values.first_month, values.last_month)) {
+    values.first_month = MonthLib.uglify(values.first_month);
+    values.last_month = MonthLib.uglify(values.last_month);
+    if (!MonthLib.isValidSpan(values.first_month, values.last_month)) {
       webix.alert({type: "alert-error", text: "First month must precede last month!"});
       return null;
     }
 
     if (!projectTimeframes) {
-      MonKey.buildProjectTimeframes();
+      MonthLib.buildProjectTimeframes();
     }
 
-    if (!MonKey.isInProjectTimeframe(projectTimeframes[values.project], values)) {
+    if (!MonthLib.isInProjectTimeframe(projectTimeframes[values.project], values)) {
       webix.alert({type: "alert-error", text: "Assignment time frame outside project time frame!"});
       return null;
     }

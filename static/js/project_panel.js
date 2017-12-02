@@ -170,8 +170,8 @@ var projectForm = {
   rules: {
     "name": webix.rules.isNotEmpty,
     "nickname": webix.rules.isNotEmpty,
-    "first_month": MonKey.isValidInput,
-    "last_month": MonKey.isValidInput
+    "first_month": MonthLib.isValidInput,
+    "last_month": MonthLib.isValidInput
   }
 };
 
@@ -194,8 +194,8 @@ var projectFormCtlr = {
       id: prj.id,
       name: prj.name,
       nickname: prj.nickname,
-      first_month: MonKey.prettify(prj.first_month),
-      last_month: MonKey.prettify(prj.last_month),
+      first_month: MonthLib.prettify(prj.first_month),
+      last_month: MonthLib.prettify(prj.last_month),
       notes: prj.notes
     });
   },
@@ -222,9 +222,9 @@ var projectFormCtlr = {
       return null;
     }
     var values = this.frm.getValues({hidden: true});
-    values.first_month = MonKey.uglify(values.first_month);
-    values.last_month = MonKey.uglify(values.last_month);
-    if (!MonKey.isValidSpan(values.first_month, values.last_month)) {
+    values.first_month = MonthLib.uglify(values.first_month);
+    values.last_month = MonthLib.uglify(values.last_month);
+    if (!MonthLib.isValidSpan(values.first_month, values.last_month)) {
       webix.alert({type: "alert-error", text: "First month must precede last month!"});
       return null;
     }
