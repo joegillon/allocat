@@ -1,0 +1,39 @@
+{% extends 'home.html' %}
+
+{% block content %}
+  <div id="content_container"></div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+
+  <script type="text/javascript">
+    var projects = {{ projects|tojson }};
+    var employees = {{ employees|tojson }};
+    var selectedProject = null;
+  </script>
+
+  <script src="{{ url_for('static', filename='js/month_lib.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/ajax_dao.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/project_panel_ro.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/project_assignment_panel_ro.js') }}"></script>
+
+  <script type="text/javascript" charset="utf-8">
+
+    webix.ready(function() {
+
+      webix.ui({
+        container: "content_container",
+        type: "space",
+        cols: [
+            projectPanelRO, projectAssignmentPanelRO
+        ]
+      });
+
+      projectPanelCtlrRO.init();
+      projectAssignmentPanelCtlrRO.init();
+
+    });
+
+  </script>
+{% endblock %}

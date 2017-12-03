@@ -28,10 +28,14 @@ var menu_data = [
     icon: "user-secret",
     value: "User Management",
     submenu: [
-      {id: "request", value: "Request Account"},
       {id: "register", value: "Create Account"},
       {id: "change", value: "Change Password"}
     ]
+  },
+  {
+    id: "logout",
+    icon: "sign-out",
+    value: "Log off"
   }
 ];
 
@@ -58,7 +62,7 @@ var mainMenu = {
       }
       if (id == "change") {
         //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-        window.location.href = Flask.url_for('security.change');
+        window.location.href = Flask.url_for('security.change_password');
         return;
       }
       if (id == "projects") {
@@ -74,6 +78,11 @@ var mainMenu = {
       if (id == "effort") {
         //noinspection JSUnresolvedVariable,JSUnresolvedFunction
         window.location.href = Flask.url_for("eff.eff_page");
+        return;
+      }
+      if (id == "logout") {
+        //noinspection JSUnresolvedVariable,JSUnresolvedFunction
+        window.location.href = Flask.url_for('security.logout');
         return;
       }
       webix.message("Not yet implemented");

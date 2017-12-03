@@ -232,6 +232,10 @@ var projectFormCtlr = {
   },
 
   remove: function(id) {
+    webix.confirm("Are you sure you want to remove this project?", function(result) {
+      webix.message(result);
+    });
+
     //noinspection JSUnresolvedVariable,JSUnresolvedFunction
     var url = Flask.url_for("prj.prj_drop", {prjid: id});
 

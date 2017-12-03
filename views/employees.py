@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, render_template
 import json
+from flask_security import current_user
 from models.project import Project
 from models.employee import Employee
 from models.assignment import Assignment
@@ -19,8 +20,11 @@ def emp_list():
             'first_month': project['first_month'],
             'last_month': project['last_month']
         } for project in prj_rex]
+
+    page = 'employees.html' if current_user.is_authenticated else 'employees_ro.html'
+
     return render_template(
-        'employees.html',
+        page,
         title='allocat employees',
         projects=projects,
         employees=employees
