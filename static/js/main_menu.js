@@ -28,8 +28,8 @@ var menu_data = [
     icon: "user-secret",
     value: "User Management",
     submenu: [
-      {id: "register", value: "Create Account"},
-      {id: "change", value: "Change Password"}
+      {id: "change", value: "Change Password"},
+      {id: "usermgt", value: "Manage Users"}
     ]
   },
   {
@@ -55,9 +55,9 @@ var mainMenu = {
         window.location.href = Flask.url_for('security.login');
         return;
       }
-      if (id == "register") {
+      if (id == "usermgt") {
         //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-        window.location.href = Flask.url_for('security.register');
+        window.location.href = Flask.url_for('usr.usr_mgt');
         return;
       }
       if (id == "change") {

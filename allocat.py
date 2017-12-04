@@ -9,6 +9,7 @@ from flask_jsglue import JSGlue
 from views.projects import prj
 from views.employees import emp
 from views.efforts import eff
+from views.users import usr
 
 app = Flask(__name__)
 jsglue = JSGlue(app)
@@ -16,6 +17,7 @@ jsglue = JSGlue(app)
 app.register_blueprint(prj)
 app.register_blueprint(emp)
 app.register_blueprint(eff)
+app.register_blueprint(usr)
 
 app.config['DEBUG'] = False
 app.config['SECRET_KEY'] = 'super-secret'
