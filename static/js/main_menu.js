@@ -52,12 +52,12 @@ var mainMenu = {
     onMenuItemClick: function(id) {
       if (id == "login") {
         //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-        window.location.href = Flask.url_for('security.login');
+        window.location.href = Flask.url_for('usr.login');
         return;
       }
       if (id == "usermgt") {
         //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-        window.location.href = Flask.url_for('usr.usr_mgt');
+        window.location.href = Flask.url_for('usr.user_mgt');
         return;
       }
       if (id == "change") {

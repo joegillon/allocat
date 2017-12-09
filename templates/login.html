@@ -7,14 +7,8 @@
 {% block scripts %}
   {{ super() }}
 
-  <script type="text/javascript">
-    var users = {{ users|tojson }};
-    var roles = {{ roles|tojson }};
-    var selectedUser = null;
-  </script>
-
   <script src="{{ url_for('static', filename='js/ajax_dao.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/user_mgt_panel.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/login_panel.js') }}"></script>
 
   <script type="text/javascript" charset="utf-8">
 
@@ -23,13 +17,10 @@
       webix.ui({
         container: "content_container",
         type: "space",
-        cols: [
-            userPanel
-        ]
+        rows: [loginPanel]
       });
 
-      userPanelCtlr.init();
-
+      loginPanelCtlr.init();
     });
 
   </script>

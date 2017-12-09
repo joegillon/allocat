@@ -269,18 +269,22 @@ var projectAssignmentFormCtlr = {
   },
 
   remove: function(id) {
-    var inputs = this.frm.getValues({hidden: true});
-    var values = {
-      id: inputs["id"],
-      project_id: inputs["project_id"]
-    };
+    webix.confirm("Are you sure you want to remove this assignment?", "confirm-warning", function(yes) {
+      if (yes) {
+        var inputs = this.frm.getValues({hidden: true});
+        var values = {
+          id: inputs["id"],
+          project_id: inputs["project_id"]
+        };
 
-    //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-    var url = Flask.url_for("prj.prj_drop_assignment");
+        //noinspection JSUnresolvedVariable,JSUnresolvedFunction
+        var url = Flask.url_for("prj.prj_drop_assignment");
 
-    ajaxDao.post(url, values, function(data) {
-      projectAssignmentListCtlr.load(data["assignments"]);
-      webix.message("Assignment removed!");
+        ajaxDao.post(url, values, function(data) {
+          projectAssignmentListCtlr.load(data["assignments"]);
+          webix.message("Assignment removed!");
+        });
+      }
     });
   }
 

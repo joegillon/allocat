@@ -1,6 +1,5 @@
-from flask import Blueprint, request, jsonify, render_template
+from flask import Blueprint, request, jsonify, render_template, session
 import json
-from flask_security import current_user
 from models.project import Project
 from models.employee import Employee
 from models.assignment import Assignment
@@ -21,7 +20,8 @@ def emp_list():
             'last_month': project['last_month']
         } for project in prj_rex]
 
-    page = 'employees.html' if current_user.is_authenticated else 'employees_ro.html'
+    is_authenticated = session['is_authenticated']
+    page = 'employees.html' if is_authenticated else 'employees_ro.html'
 
     return render_template(
         page,
@@ -37,7 +37,7 @@ def emp_add():
     try:
         empid = Employee.add(values)
     except Exception as ex:
-        return ex.message
+        return jsonify(error=str(ex))
     return jsonify(empid=empid, employees=Employee.get_all())
 
 
@@ -69,11 +69,11 @@ def emp_drop():
 @emp.route('/assignments', methods=['GET'])
 def emp_assignments():
     from models.assignment import Assignment
-    from models.monkey import Monkey
+    from models.month import Month
 
     empid = int(request.args['empid'])
-    monkey = Monkey.today()
-    data = Assignment.get_for_employee(empid, monkey)
+    month = Month.today()
+    data = Assignment.get_for_employee(empid, month)
     return jsonify(assignments=data)
 
 

@@ -1,6 +1,5 @@
-from flask import Blueprint, request, jsonify, render_template
+from flask import Blueprint, request, jsonify, render_template, session
 import json
-from flask_security import current_user
 from models.project import Project
 from models.employee import Employee
 from models.assignment import Assignment
@@ -15,7 +14,8 @@ def prj_list():
     emp_rex = Employee.get_all()
     employees = [{'id': employee['id'], 'value': employee['name']} for employee in emp_rex]
 
-    page = 'projects.html' if current_user.is_authenticated else 'projects_ro.html'
+    is_authenticated = session['is_authenticated']
+    page = 'projects.html' if is_authenticated else 'projects_ro.html'
 
     return render_template(
         page,
@@ -31,7 +31,7 @@ def prj_add():
     try:
         prjid = Project.add(values)
     except Exception as ex:
-        return ex.message
+        return jsonify(error=str(ex))
     return jsonify(prjid=prjid, projects=Project.get_all())
 
 
@@ -63,11 +63,11 @@ def prj_drop():
 @prj.route('/assignments', methods=['GET'])
 def prj_assignments():
     from models.assignment import Assignment
-    from models.monkey import Monkey
+    from models.month import Month
 
     prjid = int(request.args['prjid'])
-    monkey = Monkey.today()
-    data = Assignment.get_for_project(prjid, monkey)
+    month = Month.today()
+    data = Assignment.get_for_project(prjid, month)
     return jsonify(assignments=data)
 
 

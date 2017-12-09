@@ -3,40 +3,40 @@
  */
 
 /*=====================================================================
-User List
+Role List
 =====================================================================*/
-var userList = {
+var roleList = {
   view: "list",
-  id: "userList",
+  id: "roleList",
   select: true,
   height: 300,
   width: 200,
-  template: "#username#",
+  template: "#value#",
   on: {
     onAfterSelect: function() {
-      userListCtlr.selected();
+      roleListCtlr.selected();
     }
   }
 };
 
 /*=====================================================================
-User List Controller
+Role List Controller
 =====================================================================*/
-var userListCtlr = {
+var roleListCtlr = {
   list: null,
 
   init: function () {
-    this.list = $$("userList");
-    this.load(users);
+    this.list = $$("roleList");
+    this.load();
   },
 
   clear: function () {
     this.list.clearAll();
   },
 
-  load: function (data) {
+  load: function () {
     this.clear();
-    this.list.parse(data);
+    this.list.parse(roles);
   },
 
   select: function (id) {
@@ -45,35 +45,35 @@ var userListCtlr = {
   },
 
   selected: function () {
-    selectedUser = this.list.getSelectedItem();
-    userFormCtlr.load(selectedUser);
+    selectedRole = this.list.getSelectedItem();
+    roleFormCtlr.load(selectedRole);
   },
 
   add: function() {
-    userFormCtlr.clear();
+    roleFormCtlr.clear();
   }
 };
 
 /*=====================================================================
-User List Toolbar
+Role List Toolbar
 =====================================================================*/
-var userListToolbar = {
+var roleListToolbar = {
   view: "toolbar",
-  id: "userListToolbar",
+  id: "roleListToolbar",
   height: 35,
   rows: [
     {
       cols: [
         {
           view: "label",
-          label: "Users"
+          label: "Roles"
         },
         {
           view: "button",
           value: "Add",
           css: "add_button",
           click: function() {
-            userListCtlr.add();
+            roleListCtlr.add();
           }
         }
       ]
@@ -82,47 +82,33 @@ var userListToolbar = {
 };
 
 /*=====================================================================
-User Form
+Role Form
 =====================================================================*/
-var userForm = {
+var roleForm = {
   view: "form",
-  id: "userForm",
+  id: "roleForm",
   elements: [
-    {view: "text", name: "user_id", hidden: true},
+    {view: "text", name: "id", hidden: true},
     {
       view: "text",
-      label: "Username",
-      name: "username",
-      width: 300,
-      invalidMessage: "Username is required!"
-    },
-    {
-      view: "richselect",
       label: "Role",
-      name: "role",
+      name: "name",
       width: 300,
-      options: roles
+      invalidMessage: "Name is required!"
     },
     {
-      view: "text",
-      label: "Password",
-      name: "password",
+      view: "textarea",
+      label: "Description",
+      name: "description",
       width: 300,
-      hidden: false
-    },
-    {
-      view: "text",
-      label: "Confirm Password",
-      name: "confirm",
-      width: 300,
-      hidden: false
+      height: 100
     },
     {
       view: "button",
       value: "Save",
       type: "form",
       click: function() {
-        userFormCtlr.save();
+        roleFormCtlr.save();
       }
     },
     {
@@ -130,53 +116,51 @@ var userForm = {
       value: "Remove",
       type: "danger",
       click: function() {
-        userFormCtlr.remove(this.getParentView().getValues().id);
+        roleFormCtlr.remove(this.getParentView().getValues().id);
       }
     }
   ],
   rules: {
-    "username": webix.rules.isNotEmpty
+    "name": webix.rules.isNotEmpty
   }
 };
 
 /*=====================================================================
-User Form Controller
+Role Form Controller
 =====================================================================*/
-var userFormCtlr = {
+var roleFormCtlr = {
   frm: null,
 
   init: function() {
-    this.frm = $$("userForm");
+    this.frm = $$("roleForm");
   },
 
   clear: function() {
     this.frm.clear();
   },
 
-  load: function(usr) {
+  load: function(role) {
     this.frm.setValues({
-      id: usr.user_id,
-      username: usr.username,
-      password: usr.password,
-      confirm: usr.password
+      id: role.id,
+      name: role.value,
+      description: role.description
     });
-    //noinspection JSUnresolvedVariable
-    this.frm.getChildViews()[2].setValue(usr.role_id);
   },
 
   save: function() {
     var values = this.validate();
     if (!values) return;
 
-    var url = "usr.usr_add";
+    var url = values["id"] ? "usr.role_update" : "usr.role_add";
 
     //noinspection JSUnresolvedVariable,JSUnresolvedFunction
     url = Flask.url_for(url);
 
     ajaxDao.post(url, values, function(data) {
-      usrListCtlr.load(data["users"]);
-      userListCtlr.select(data["usrid"]);
-      webix.message("User saved!");
+      roles = data["roles"];
+      roleListCtlr.load();
+      roleListCtlr.select(data["id"]);
+      webix.message("Role saved!");
     });
 
   },
@@ -187,69 +171,65 @@ var userFormCtlr = {
     }
     var values = this.frm.getValues({hidden: true});
 
-    if (values["password"] != values["confirm"]) {
-      webix.alert({type: "alert-error", text: "Passwords don't match!"});
-      return null;
-    }
-
-    //check that role is selected
+    //check that role is unique
 
     return values;
   },
 
   remove: function(id) {
-    webix.confirm("Are you sure you want to remove this user?", function(result) {
-      webix.message(result);
-    });
+    webix.confirm("Are you sure you want to remove this role?", "confirm-warning", function(yes) {
+      if (yes) {
+        //noinspection JSUnresolvedVariable,JSUnresolvedFunction
+        var url = Flask.url_for("usr.role_drop", {id: id});
 
-    //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-    var url = Flask.url_for("usr.usr_drop", {user_id: id});
-
-    ajaxDao.get(url, function(data) {
-      selectedUser = null;
-      userListCtlr.load(data["users"]);
-      userFormCtlr.clear();
-      webix.message("User removed!");
+        ajaxDao.get(url, function(data) {
+          selectedRole = null;
+          roles = data["roles"];
+          roleListCtlr.load();
+          roleFormCtlr.clear();
+          webix.message("Role removed!");
+        });
+      }
     });
   }
 };
 
 /*=====================================================================
-User Form Toolbar
+Role Form Toolbar
 =====================================================================*/
-var userFormToolbar = {
+var roleFormToolbar = {
   view: "toolbar",
-  id: "userFormToolbar",
+  id: "roleFormToolbar",
   height: 35,
   cols: [
-    {view: "label", label: "User Details"}
+    {view: "label", label: "Role Details"}
   ]
 };
 
 /*=====================================================================
-User Panel
+Role Panel
 =====================================================================*/
-var userPanel = {
+var rolePanel = {
   type: "space",
   css: "panel_layout",
   cols: [
     {
-      rows: [userListToolbar, userList]
+      rows: [roleListToolbar, roleList]
     },
     {
-      rows: [userFormToolbar, userForm]
+      rows: [roleFormToolbar, roleForm]
     }
   ]
 };
 
 /*=====================================================================
-User Panel Controller
+Role Panel Controller
 =====================================================================*/
-var userPanelCtlr = {
+var rolePanelCtlr = {
 
   init: function() {
-    userListCtlr.init();
-    userFormCtlr.init();
+    roleListCtlr.init();
+    roleFormCtlr.init();
   }
 
 };

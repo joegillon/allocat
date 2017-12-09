@@ -3,9 +3,6 @@ from models.dao import Dao
 
 class Project(object):
 
-    def __str__(self):
-        return self.nickname
-
     @staticmethod
     def get_all():
         sql = "SELECT * FROM projects ORDER BY nickname;"

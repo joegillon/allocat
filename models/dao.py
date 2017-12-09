@@ -5,13 +5,19 @@ dbfile = 'c:/bench/allocat/data/allocat.db'
 
 class Dao(object):
 
+    def __init__(self):
+        self.cxn = sqlite3.connect(dbfile)
+
     @staticmethod
     def execute(sql, params=None):
         cxn = sqlite3.connect(dbfile)
         op = sql.split(' ', 1)[0].upper()
         if op == 'SELECT':
-            return Dao.__query(cxn, sql, params)
-        return Dao.__save(op, cxn, sql, params)
+            result = Dao.__query(cxn, sql, params)
+        else:
+            result = Dao.__save(op, cxn, sql, params)
+        cxn.close()
+        return result
 
     @staticmethod
     def __query(cxn, sql, params=None):

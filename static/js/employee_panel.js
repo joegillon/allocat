@@ -302,15 +302,19 @@ var employeeFormCtlr = {
   },
 
   remove: function(id) {
-    //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-    var url = Flask.url_for("emp.emp_drop", {empid: id});
+    webix.confirm("Are you sure you want to remove this employee?", "confirm-warning", function(yes) {
+      if (yes) {
+        //noinspection JSUnresolvedVariable,JSUnresolvedFunction
+        var url = Flask.url_for("emp.emp_drop", {empid: id});
 
-    ajaxDao.get(url, function(data) {
-      selectedEmployee = null;
-      employeeListCtlr.load(data["employees"]);
-      employeeFormCtlr.clear();
-      employeeAssignmentPanelCtlr.clear();
-      webix.message("Employee removed!");
+        ajaxDao.get(url, function(data) {
+          selectedEmployee = null;
+          employeeListCtlr.load(data["employees"]);
+          employeeFormCtlr.clear();
+          employeeAssignmentPanelCtlr.clear();
+          webix.message("Employee removed!");
+        });
+      }
     });
   }
 };

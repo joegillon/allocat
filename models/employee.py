@@ -3,9 +3,6 @@ from models.dao import Dao
 
 class Employee(object):
 
-    def __str__(self):
-        return self.name
-
     @staticmethod
     def get_all():
         sql = "SELECT * FROM employees ORDER BY name;"

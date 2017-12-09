@@ -1,5 +1,22 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-  <img src="{{ url_for('static', filename='img/download.gif') }}" />
+  <table align="center" border="0">
+    <tr>
+      <td colspan="2"><img src="{{ url_for('static', filename='img/download.gif') }}" /></td>
+    <tr>
+      <td colspan="2"><img src="{{ url_for('static', filename='img/allocat_name.png') }}" /></td>
+    </tr>
+    <tr>
+      <td>by</td>
+      <td><img src="{{ url_for('static', filename='img/vcb_logo_80_112_2.jpg') }}" /></td>
+    </tr>
+    <tr>
+      <td colspan="2"><img src="{{ url_for('static', filename='img/cowboy.png') }}" /></td>
+    </tr>
+    <tr>
+      <td colspan="2">All rights reserved.</td>
+    </tr>
+  </table>
+
 {% endblock %}

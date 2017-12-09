@@ -89,4 +89,3 @@ class EffortTable(object):
                 k = '%s:%s' % (row.employee['id'], cell.month)
                 d[k] = [e.serialize() for e in cell.percent_efforts]
         return d
-
