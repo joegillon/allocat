@@ -63,11 +63,11 @@ def prj_drop():
 @prj.route('/assignments', methods=['GET'])
 def prj_assignments():
     from models.assignment import Assignment
-    from models.month import Month
+    # from models.month import Month
 
     prjid = int(request.args['prjid'])
-    month = Month.today()
-    data = Assignment.get_for_project(prjid, month)
+    # month = Month.today()     # This gets current assignments
+    data = Assignment.get_for_project(prjid)
     return jsonify(assignments=data)
 
 
