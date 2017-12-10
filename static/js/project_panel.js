@@ -97,6 +97,7 @@ var projectListToolbar = {
       view: "text",
       id: "projectFilter",
       label: 'Filter',
+      labelAlign: "right",
       width: 200,
       on: {
         onTimedKeyPress: function() {
@@ -121,6 +122,7 @@ var projectForm = {
     {
       view: "textarea",
       label: "Name",
+      labelAlign: "right",
       name: "name",
       width: 300,
       height: 100,
@@ -129,6 +131,7 @@ var projectForm = {
     {
       view: "text",
       label: "Nickname",
+      labelAlign: "right",
       name: "nickname",
       width: 300,
       invalidMessage: "Project nickname is required!"
@@ -136,6 +139,7 @@ var projectForm = {
     {
       view: "text",
       label: "First Month",
+      labelAlign: "right",
       name: "first_month",
       placeholder: "MM/YY",
       width: 300,
@@ -144,12 +148,20 @@ var projectForm = {
     {
       view: "text",
       label: "Last Month",
+      labelAlign: "right",
       name: "last_month",
       placeholder: "MM/YY",
       width: 300,
       invalidMessage: "Month format is numeric MM/YY!"
     },
-    {view: "textarea", label: "Notes", name: "notes", width: 300, height: 100},
+    {
+      view: "textarea",
+      label: "Notes",
+      labelAlign: "right",
+      name: "notes",
+      width: 300,
+      height: 100
+    },
     {
       view: "button",
       value: "Save",

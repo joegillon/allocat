@@ -83,6 +83,7 @@ var effortGridToolbar = {
       view: "text",
       name: "first_month",
       label: "Start",
+      labelAlign: "right",
       width: 150,
       placeholder: "MM/YY",
       invalidMessage: "Month format is numeric MM/YY!"
@@ -91,6 +92,7 @@ var effortGridToolbar = {
       view: "text",
       name: "last_month",
       label: "Thru",
+      labelAlign: "right",
       width: 150,
       placeholder: "MM/YY",
       invalidMessage: "Month format is numeric MM/YY!"

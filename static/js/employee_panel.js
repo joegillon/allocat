@@ -115,6 +115,7 @@ var employeeListToolbar = {
       view: "text",
       id: "employeeFilter",
       label: 'Filter',
+      labelAlign: "right",
       width: 200,
       on: {
         onTimedKeyPress: function() {
@@ -150,6 +151,7 @@ var employeeForm = {
     {
       view: "text",
       label: "Name",
+      labelAlign: "right",
       name: "name",
       width: 300,
       placeholder: "Last,First Middle",
@@ -163,13 +165,13 @@ var employeeForm = {
     {
       view: "text",
       label: "Grade",
+      labelAlign: "right",
       name: "grade",
       width: 300,
       invalidMessage: "Employee grade must be 0-15!",
       on: {
         onBlur: function() {
           employeeFormCtlr.setInvestigator(this.getValue());
-          //return false;
         }
       }
 
@@ -177,6 +179,7 @@ var employeeForm = {
     {
       view: "text",
       label: "Step",
+      labelAlign: "right",
       name: "step",
       width: 300,
       invalidMessage: "Employee step must be 0-15!"
@@ -184,6 +187,7 @@ var employeeForm = {
     {
       view: "text",
       label: "FTE",
+      labelAlign: "right",
       name: "fte",
       width: 300,
       invalidMessage: "Employee FTE must be 0-100!"
@@ -191,10 +195,18 @@ var employeeForm = {
     {
       view: "checkbox",
       label: "Investigator",
+      labelAlign: "right",
       name: "investigator",
       width: 300
     },
-    {view: "textarea", label: "Notes", name: "notes", width: 300, height: 100},
+    {
+      view: "textarea",
+      label: "Notes",
+      labelAlign: "right",
+      name: "notes",
+      width: 300,
+      height: 100
+    },
     {
       view: "button",
       value: "Save",

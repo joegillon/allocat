@@ -92,6 +92,7 @@ var roleForm = {
     {
       view: "text",
       label: "Role",
+      labelAlign: "right",
       name: "name",
       width: 300,
       invalidMessage: "Name is required!"
@@ -99,6 +100,7 @@ var roleForm = {
     {
       view: "textarea",
       label: "Description",
+      labelAlign: "right",
       name: "description",
       width: 300,
       height: 100

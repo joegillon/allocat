@@ -1,16 +1,12 @@
 import sqlite3
-
-dbfile = 'c:/bench/allocat/data/allocat.db'
+from flask import current_app as app
 
 
 class Dao(object):
 
-    def __init__(self):
-        self.cxn = sqlite3.connect(dbfile)
-
     @staticmethod
     def execute(sql, params=None):
-        cxn = sqlite3.connect(dbfile)
+        cxn = sqlite3.connect(app.config['DB_PATH'])
         op = sql.split(' ', 1)[0].upper()
         if op == 'SELECT':
             result = Dao.__query(cxn, sql, params)

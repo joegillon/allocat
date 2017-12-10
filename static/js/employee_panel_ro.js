@@ -102,6 +102,7 @@ var employeeListToolbarRO = {
       view: "text",
       id: "employeeFilterRO",
       label: 'Filter',
+      labelAlign: "right",
       width: 200,
       on: {
         onTimedKeyPress: function() {
@@ -137,6 +138,7 @@ var employeeFormRO = {
     {
       view: "text",
       label: "Name",
+      labelAlign: "right",
       name: "name",
       width: 300,
       readonly: true
@@ -144,6 +146,7 @@ var employeeFormRO = {
     {
       view: "text",
       label: "Grade",
+      labelAlign: "right",
       name: "grade",
       width: 300,
       readonly: true
@@ -151,6 +154,7 @@ var employeeFormRO = {
     {
       view: "text",
       label: "Step",
+      labelAlign: "right",
       name: "step",
       width: 300,
       readonly: true
@@ -158,6 +162,7 @@ var employeeFormRO = {
     {
       view: "text",
       label: "FTE",
+      labelAlign: "right",
       name: "fte",
       width: 300,
       readonly: true
@@ -165,11 +170,20 @@ var employeeFormRO = {
     {
       view: "checkbox",
       label: "Investigator",
+      labelAlign: "right",
       name: "investigator",
       width: 300,
       disabled: true
     },
-    {view: "textarea", label: "Notes", name: "notes", width: 300, height: 100, readonly: true}
+    {
+      view: "textarea",
+      label: "Notes",
+      labelAlign: "right",
+      name: "notes",
+      width: 300,
+      height: 100,
+      readonly: true
+    }
   ]
 };
 

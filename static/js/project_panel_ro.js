@@ -84,6 +84,7 @@ var projectListToolbarRO = {
       view: "text",
       id: "projectFilterRO",
       label: 'Filter',
+      labelAlign: "right",
       width: 200,
       on: {
         onTimedKeyPress: function() {
@@ -108,6 +109,7 @@ var projectFormRO = {
     {
       view: "textarea",
       label: "Name",
+      labelAlign: "right",
       name: "name",
       width: 300,
       height: 100,
@@ -116,6 +118,7 @@ var projectFormRO = {
     {
       view: "text",
       label: "Nickname",
+      labelAlign: "right",
       name: "nickname",
       width: 300,
       readonly: true
@@ -123,6 +126,7 @@ var projectFormRO = {
     {
       view: "text",
       label: "First Month",
+      labelAlign: "right",
       name: "first_month",
       width: 300,
       readonly: true
@@ -130,11 +134,19 @@ var projectFormRO = {
     {
       view: "text",
       label: "Last Month",
+      labelAlign: "right",
       name: "last_month",
       width: 300,
       readonly: true
     },
-    {view: "textarea", label: "Notes", name: "notes", width: 300, height: 100, readonly: true}
+    {
+      view: "textarea",
+      label: "Notes",
+      labelAlign: "right",
+      name: "notes",
+      width: 300,
+      height: 100,
+      readonly: true}
   ]
 };
 

@@ -1,21 +1,19 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-  <table align="center" border="0">
+  <table border="0" style="margin-left: 200px; margin-top: 20px">
     <tr>
-      <td colspan="2"><img src="{{ url_for('static', filename='img/download.gif') }}" /></td>
+      <td><img src="{{ url_for('static', filename='img/download.gif') }}" /></td>
+      <td></td>
+      <td align="center"><img src="{{ url_for('static', filename='img/vcb_logo_80_112_2.jpg') }}" /></td>
     <tr>
-      <td colspan="2"><img src="{{ url_for('static', filename='img/allocat_name.png') }}" /></td>
-    </tr>
-    <tr>
+      <td><img src="{{ url_for('static', filename='img/allocat_name.png') }}" /></td>
       <td>by</td>
-      <td><img src="{{ url_for('static', filename='img/vcb_logo_80_112_2.jpg') }}" /></td>
-    </tr>
+      <td><img src="{{ url_for('static', filename='img/cowboy.png') }}" /></td>
     <tr>
-      <td colspan="2"><img src="{{ url_for('static', filename='img/cowboy.png') }}" /></td>
-    </tr>
-    <tr>
-      <td colspan="2">All rights reserved.</td>
+      <td></td>
+      <td></td>
+      <td align="right">All rights reserved.</td>
     </tr>
   </table>
 

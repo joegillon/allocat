@@ -88,6 +88,7 @@ var projectAssignmentListToolbarRO = {
       view: "text",
       id: "projectAssignmentFilterRO",
       label: 'Filter',
+      labelAlign: "right",
       width: 200,
       on: {
         onTimedKeyPress: function() {
@@ -105,6 +106,7 @@ var projectAssignmentFormElementsRO = [
   {
     view: "text",
     label: "Employee",
+    labelAlign: "right",
     name: "employee",
     width: 300,
     readonly: true
@@ -112,6 +114,7 @@ var projectAssignmentFormElementsRO = [
   {
     view: "text",
     label: "Project",
+    labelAlign: "right",
     name: "project",
     width: 300,
     readonly: true
@@ -119,6 +122,7 @@ var projectAssignmentFormElementsRO = [
   {
     view: "text",
     label: "First Month",
+    labelAlign: "right",
     name: "first_month",
     width: 300,
     readonly: true
@@ -126,6 +130,7 @@ var projectAssignmentFormElementsRO = [
   {
     view: "text",
     label: "Last Month",
+    labelAlign: "right",
     name: "last_month",
     width: 300,
     readonly: true
@@ -133,10 +138,19 @@ var projectAssignmentFormElementsRO = [
   {
     view: "text",
     label: "Effort",
+    labelAlign: "right",
     name: "effort",
     readonly: true
   },
-  {view: "textarea", label: "Notes", name: "notes", width: 300, height: 100, readonly: true},
+  {
+    view: "textarea",
+    label: "Notes",
+    labelAlign: "right",
+    name: "notes",
+    width: 300,
+    height: 100,
+    readonly: true
+  },
   {view: "text", name: "id", hidden: true},
   {view: "text", name: "employee_id", hidden: true},
   {view: "text", name: "project_id", hidden: true}
@@ -170,6 +184,7 @@ var projectAssignmentFormCtlrRO = {
 
   load: function(asn) {
     this.frm.setValues({
+      employee: asn.employee,
       project: selectedProject.nickname,
       first_month: MonthLib.prettify(asn.first_month),
       last_month: MonthLib.prettify(asn.last_month),
@@ -179,8 +194,6 @@ var projectAssignmentFormCtlrRO = {
       employee_id: asn.employee_id,
       project_id: selectedProject.id
     });
-    //noinspection JSUnresolvedVariable
-    this.frm.getChildViews()[0].setValue(asn.employee_id);
   }
 };
 

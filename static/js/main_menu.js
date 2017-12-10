@@ -26,11 +26,16 @@ var menu_data = [
   {
     id: "usermgt",
     icon: "user-secret",
-    value: "User Management",
+    value: "Users",
     submenu: [
       {id: "change", value: "Change Password"},
       {id: "usermgt", value: "Manage Users"}
     ]
+  },
+  {
+    id: "backup",
+    icon: "save",
+    value: "Backup"
   },
   {
     id: "logout",
@@ -43,7 +48,6 @@ var mainMenu = {
   view: "menu",
   id: "mainMenu",
   data: menu_data,
-  //css: "menu_bar",
   type: {
     subsign: true,
     height: 40
@@ -62,7 +66,7 @@ var mainMenu = {
       }
       if (id == "change") {
         //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-        window.location.href = Flask.url_for('security.change_password');
+        window.location.href = Flask.url_for('usr.change_password');
         return;
       }
       if (id == "projects") {
@@ -82,7 +86,12 @@ var mainMenu = {
       }
       if (id == "logout") {
         //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-        window.location.href = Flask.url_for('security.logout');
+        window.location.href = Flask.url_for('usr.logoff');
+        return;
+      }
+      if (id == "backup") {
+        //noinspection JSUnresolvedVariable,JSUnresolvedFunction
+        window.location.href = Flask.url_for('backup');
         return;
       }
       webix.message("Not yet implemented");

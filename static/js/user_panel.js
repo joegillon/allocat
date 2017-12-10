@@ -94,6 +94,8 @@ var userForm = {
       label: "Username",
       name: "username",
       width: 300,
+      labelWidth: 120,
+      labelAlign: "right",
       invalidMessage: "Username is required!"
     },
     {
@@ -101,21 +103,29 @@ var userForm = {
       label: "Role",
       name: "role_id",
       width: 300,
+      labelWidth: 120,
+      labelAlign: "right",
       options: roles
     },
     {
       view: "text",
       label: "Password",
       name: "password",
+      type: "password",
       width: 300,
-      hidden: false
+      labelWidth: 120,
+      labelAlign: "right",
+      invalidMessage: "Password is required!"
     },
     {
       view: "text",
       label: "Confirm Password",
       name: "confirm",
+      type: "password",
       width: 300,
-      hidden: false
+      labelWidth: 120,
+      labelAlign: "right",
+      invalidMessage: "Confirm Password is required!"
     },
     {
       view: "button",
@@ -135,7 +145,9 @@ var userForm = {
     }
   ],
   rules: {
-    "username": webix.rules.isNotEmpty
+    "username": webix.rules.isNotEmpty,
+    "password": webix.rules.isNotEmpty,
+    "confirm": webix.rules.isNotEmpty
   }
 };
 

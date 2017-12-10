@@ -3,60 +3,71 @@
  */
 
 /*=====================================================================
-Login Form
+Password Form
 =====================================================================*/
-var loginForm = {
+var passwordForm = {
   view: "form",
-  id: "loginForm",
+  id: "passwordForm",
+  width: 500,
   elements: [
     {
       view: "text",
-      name: "username",
-      label: "Username",
-      width: 300,
-      invalidMessage: "Username is required!"
+      name: "new_password",
+      label: "New Password",
+      labelAlign: "right",
+      type: "password",
+      width: 500,
+      labelWidth: 120,
+      invalidMessage: "New Password is required!"
     },
     {
       view: "text",
-      name: "password",
-      label: "Password",
+      name: "confirm",
+      label: "Confirm Password",
+      labelAlign: "right",
       type: "password",
-      width: 300,
-      invalidMessage: "Password is required!"
+      width: 500,
+      labelWidth: 120,
+      invalidMessage: "Confirm Password is required!"
     },
     {
       view: "button",
-      value: "Login",
+      value: "Save",
       type: "form",
       click: function() {
-        loginFormCtlr.login();
+        passwordFormCtlr.save();
       }
     }
   ],
   rules: {
-    "username": webix.rules.isNotEmpty,
-    "password": webix.rules.isNotEmpty
+    "new_password": webix.rules.isNotEmpty,
+    "confirm": webix.rules.isNotEmpty
   }
 };
 
 /*=====================================================================
-Login Form Controller
+Password Form Controller
 =====================================================================*/
-var loginFormCtlr = {
+var passwordFormCtlr = {
   frm: null,
 
   init: function() {
-    this.frm = $$("loginForm");
+    this.frm = $$("passwordForm");
   },
 
-  login: function() {
+  save: function() {
     if (!this.frm.validate())
-      return null;
+      return;
 
     var values = this.frm.getValues();
 
+    if (values["new_password"] != values["confirm"]) {
+      webix.alert({type: "alert-error", text: "Passwords don't match!"});
+      return;
+    }
+
     //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-    var url = Flask.url_for("usr.login");
+    var url = Flask.url_for("usr.change_password");
     ajaxDao.post(url, values, function(response) {
       if (response.error) {
         webix.message({type: "error", text: response.error})
@@ -68,19 +79,19 @@ var loginFormCtlr = {
 };
 
 /*=====================================================================
-Login Panel
+Password Panel
 =====================================================================*/
-var loginPanel = {
+var passwordPanel = {
   type: "space",
   css: "panel_layout",
-  rows: [loginForm]
+  rows: [passwordForm]
 };
 
 /*=====================================================================
-Login Panel Controller
+Password Panel Controller
 =====================================================================*/
-var loginPanelCtlr = {
+var passwordPanelCtlr = {
   init: function() {
-    loginFormCtlr.init();
+    passwordFormCtlr.init();
   }
 };

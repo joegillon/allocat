@@ -96,6 +96,7 @@ var projectAssignmentListToolbar = {
       view: "text",
       id: "projectAssignmentFilter",
       label: 'Filter',
+      labelAlign: "right",
       width: 200,
       on: {
         onTimedKeyPress: function() {
@@ -113,6 +114,7 @@ var projectAssignmentFormElements = [
   {
     view: "combo",
     label: "Employee",
+    labelAlign: "right",
     name: "employee",
     width: 300,
     options: employees,
@@ -121,6 +123,7 @@ var projectAssignmentFormElements = [
   {
     view: "text",
     label: "Project",
+    labelAlign: "right",
     name: "project",
     width: 300,
     readonly: true,
@@ -129,6 +132,7 @@ var projectAssignmentFormElements = [
   {
     view: "text",
     label: "First Month",
+    labelAlign: "right",
     name: "first_month",
     placeholder: "MM/YY",
     width: 300,
@@ -137,6 +141,7 @@ var projectAssignmentFormElements = [
   {
     view: "text",
     label: "Last Month",
+    labelAlign: "right",
     name: "last_month",
     placeholder: "MM/YY",
     width: 300,
@@ -145,10 +150,18 @@ var projectAssignmentFormElements = [
   {
     view: "text",
     label: "Effort",
+    labelAlign: "right",
     name: "effort",
     invalidMessage: "Percent Effort must be 0-100!"
   },
-  {view: "textarea", label: "Notes", name: "notes", width: 300, height: 100},
+  {
+    view: "textarea",
+    label: "Notes",
+    labelAlign: "right",
+    name: "notes",
+    width: 300,
+    height: 100
+  },
   {view: "text", name: "id", hidden: true},
   {view: "text", name: "employee_id", hidden: true},
   {view: "text", name: "project_id", hidden: true},
