@@ -23,6 +23,11 @@ def set_user():
     session['target'] = None
 
 
+# @app.before_request
+# def before_view():
+#     print(request.endpoint)
+
+
 @app.route('/')
 def homepage():
     return render_template('home.html', title='allocat')
@@ -58,7 +63,7 @@ if __name__ == '__main__':
     app_path = os.path.dirname(__file__)
 
     config = configparser.ConfigParser()
-    config.read(app_path + '/config.ini')
+    config.read(app_path + '/allocat.cfg')
     app.secret_key = config['USER_MGT']['key']
     fDebug = config['PHASE']['development'] == 'True'
     app.config['DB_PATH'] = config['DATABASE']['db_path'][1:-1]

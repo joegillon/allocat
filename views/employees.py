@@ -20,7 +20,7 @@ def emp_list():
             'last_month': project['last_month']
         } for project in prj_rex]
 
-    is_authenticated = session['is_authenticated']
+    is_authenticated = session['is_authenticated'] if 'is_authenticated' in session else False
     page = 'employees.html' if is_authenticated else 'employees_ro.html'
 
     return render_template(

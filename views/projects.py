@@ -14,7 +14,7 @@ def prj_list():
     emp_rex = Employee.get_all()
     employees = [{'id': employee['id'], 'value': employee['name']} for employee in emp_rex]
 
-    is_authenticated = session['is_authenticated']
+    is_authenticated = session['is_authenticated'] if 'is_authenticated' in session else False
     page = 'projects.html' if is_authenticated else 'projects_ro.html'
 
     return render_template(

@@ -2,6 +2,12 @@
  * Created by Joe on 11/15/2017.
  */
 
+var skins = [
+  "Aircompact", "Antique", "Brownie", "Clouds", "Compact", "Dusty",
+  "Eggplant", "Flamingo", "Flat", "Forest", "Light", "Mauve", "Metro", "Monkey",
+  "Pinko", "QED", "Saints", "Sandy", "Tan", "Tangerine"
+];
+
 var menu_data = [
   {
     id: "login",
@@ -36,6 +42,12 @@ var menu_data = [
     id: "backup",
     icon: "save",
     value: "Backup"
+  },
+  {
+    id: "skins",
+    icon: "",
+    value: "Skins...",
+    submenu: skins
   },
   {
     id: "logout",
@@ -93,6 +105,10 @@ var mainMenu = {
         //noinspection JSUnresolvedVariable,JSUnresolvedFunction
         window.location.href = Flask.url_for('backup');
         return;
+      }
+      if (skins.indexOf(id) != -1) {
+        switch_skin(id);
+        return false;
       }
       webix.message("Not yet implemented");
     }
