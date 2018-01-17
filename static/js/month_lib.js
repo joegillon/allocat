@@ -4,7 +4,7 @@
 
 var MonthLib = {
   isValidInput: function(input) {
-    return /^(0[1-9]|1[0-2])\/[0-9]{2}$/.test(input);
+    return /^([0]*[1-9]|1[0-2])\/[0-9]{2}$/.test(input);
   },
 
   prettify: function(month) {
@@ -13,6 +13,9 @@ var MonthLib = {
 
   uglify: function(input) {
     var parts = input.split('/');
+    if (parts[0].length == 1) {
+      parts[0] = '0' + parts[0];
+    }
     return parts[1] + parts[0];
   },
 

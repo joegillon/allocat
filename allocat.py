@@ -60,7 +60,7 @@ if __name__ == '__main__':
     import configparser
     import os
 
-    app_path = os.path.dirname(__file__)
+    app_path = os.path.dirname(os.path.abspath(__file__))
 
     config = configparser.ConfigParser()
     config.read(app_path + '/allocat.cfg')
