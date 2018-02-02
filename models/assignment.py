@@ -16,9 +16,9 @@ class Assignment(object):
                "FROM assignments AS a "
                "JOIN employees AS e ON a.employee_id=e.id "
                "JOIN projects AS p ON a.project_id=p.id "
-               "WHERE a.first_month >= ? "
-               "AND a.last_month <= ?;")
-        vals = (first_month, last_month)
+               "WHERE a.first_month BETWEEN ? AND ? "
+               "OR a.last_month BETWEEN ? AND ?;")
+        vals = (first_month, last_month, first_month, last_month)
         return Dao.execute(sql, vals)
 
     @staticmethod

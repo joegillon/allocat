@@ -17,8 +17,8 @@ Effort Grid
 var effortGrid = {
   view: "datatable",
   id: "effortGrid",
-  autowidth: true,
-  autoheight: true,
+  width: 600,
+  height: 200,
   columns: effortGridCols,  // Don't know why this has to be here but...
   on: {
     onItemClick: function(id) {

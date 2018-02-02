@@ -59,7 +59,7 @@ var projectListCtlrRO = {
 
   filter: function(value) {
     this.list.filter(function(obj) {
-      return obj.nickname.toLowerCase().indexOf(value) == 0;
+      return obj.nickname.toLowerCase().indexOf(value) != -1;
     })
   }
 };

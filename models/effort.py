@@ -67,7 +67,7 @@ class EffortTable(object):
                 if employee['id'] not in employee_assignments:
                     continue
                 for emp_asn in employee_assignments[employee['id']]:
-                    if month < emp_asn['first_month'] or month > emp_asn['last_month']:
+                    if int(month) < emp_asn['first_month'] or int(month) > emp_asn['last_month']:
                         continue
                     cell.total += emp_asn['effort']
                     cell.percent_efforts.append(
